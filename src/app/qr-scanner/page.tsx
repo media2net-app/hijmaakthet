@@ -13,7 +13,6 @@ interface Workstation {
 export default function QRScannerPage() {
   const [scannedCode, setScannedCode] = useState('');
   const [selectedWorkstation, setSelectedWorkstation] = useState('');
-  const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);

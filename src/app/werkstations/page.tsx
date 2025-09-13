@@ -265,7 +265,7 @@ export default function WerkstationsPage() {
 
           {/* Workstations Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {workstations.map((workstation, index) => (
+            {workstations.map((workstation) => (
               <div key={workstation.id} className="bg-gray-800 rounded-lg p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">

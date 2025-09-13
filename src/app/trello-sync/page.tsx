@@ -344,7 +344,7 @@ export default function TrelloSyncPage() {
               <div className="space-y-3 text-gray-300">
                 <p>1. Ga naar <a href="https://trello.com/app-key" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">trello.com/app-key</a></p>
                 <p>2. Kopieer je API Key</p>
-                <p>3. Klik op "Token" om je persoonlijke token te genereren</p>
+                <p>3. Klik op &quot;Token&quot; om je persoonlijke token te genereren</p>
                 <p>4. Voer beide gegevens hierboven in om te verbinden</p>
               </div>
             </div>

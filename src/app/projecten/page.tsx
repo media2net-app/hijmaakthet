@@ -49,9 +49,13 @@ export default function ProjectenPage() {
   ]);
 
   const [showNewProject, setShowNewProject] = useState(false);
-  const [newProject, setNewProject] = useState({
+  const [newProject, setNewProject] = useState<{
+    name: string;
+    type: 'schuifdeur' | 'taatsdeur' | 'ander';
+    client: string;
+  }>({
     name: '',
-    type: 'schuifdeur' as const,
+    type: 'schuifdeur',
     client: ''
   });
   const [qrCodes, setQrCodes] = useState<{[key: string]: string}>({});
@@ -327,7 +331,7 @@ export default function ProjectenPage() {
                 <label className="block text-sm font-medium text-white mb-2">Type</label>
                 <select
                   value={newProject.type}
-                  onChange={(e) => setNewProject({...newProject, type: e.target.value as any})}
+                  onChange={(e) => setNewProject({...newProject, type: e.target.value as 'schuifdeur' | 'taatsdeur' | 'ander'})}
                   className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="schuifdeur">Schuifdeur</option>
