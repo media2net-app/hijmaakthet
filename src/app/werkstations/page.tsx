@@ -190,11 +190,10 @@ export default function WerkstationsPage() {
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
             <img 
-              src="/svg/hij-maakt-het.svg" 
-              alt="Hij Maakt Het Logo" 
+              src="/SVG/hij-maakt-het.svg" 
+              alt="Hij Maakt Het" 
               className="h-10 w-auto object-contain"
             />
-            <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
         </div>
 

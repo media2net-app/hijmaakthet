@@ -1,95 +1,173 @@
 'use client';
 
 import { useState } from 'react';
-import { useAnimatedCounter } from '../../hooks/useAnimatedCounter';
+import { useAnimatedCounter } from '@/hooks/useAnimatedCounter';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 interface Appointment {
   id: string;
-  title: string;
   client: string;
-  location: string;
-  date: string;
+  type: 'installatie' | 'onderhoud' | 'inspectie' | 'overleg';
+  date: Date;
   time: string;
   duration: number;
-  type: 'plaatsing' | 'onderhoud' | 'inspectie' | 'overleg';
-  status: 'gepland' | 'bevestigd' | 'uitgevoerd' | 'geannuleerd';
-  projectId?: string;
+  location: string;
+  status: 'bevestigd' | 'in_behandeling' | 'wachtend' | 'voltooid';
+  description: string;
+  contact: string;
+  phone: string;
 }
 
 export default function PlanningPage() {
-  // Animated counters
-  const totalAppointments = useAnimatedCounter(12, 1500);
-  const confirmedAppointments = useAnimatedCounter(8, 2000);
-  const pendingAppointments = useAnimatedCounter(4, 1800);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [view, setView] = useState<'table' | 'calendar'>('table');
 
-  const [appointments] = useState<Appointment[]>([
+  // Animated counters
+  const totalAppointments = useAnimatedCounter(47);
+  const confirmedAppointments = useAnimatedCounter(32);
+  const pendingAppointments = useAnimatedCounter(15);
+
+  // September 2025 appointments data
+  const appointments: Appointment[] = [
     {
-      id: 'APT-001',
-      title: 'Plaatsing Schuifdeur',
-      client: 'Jan de Vries',
-      location: 'Amsterdam Centrum',
-      date: '2024-01-15',
+      id: 'APT-2025-001',
+      client: 'Bouwbedrijf Amsterdam',
+      type: 'installatie',
+      date: new Date(2025, 8, 3), // 3 september
       time: '09:00',
       duration: 4,
-      type: 'plaatsing',
+      location: 'Amsterdam Centrum',
       status: 'bevestigd',
-      projectId: 'HMT-2024-001'
+      description: 'Installatie schuifdeur kantoorgebouw',
+      contact: 'Jan de Vries',
+      phone: '06-12345678'
     },
     {
-      id: 'APT-002',
-      title: 'Onderhoud Taatsdeur',
-      client: 'Maria Jansen',
-      location: 'Utrecht Oost',
-      date: '2024-01-16',
+      id: 'APT-2025-002',
+      client: 'Architectenbureau Rotterdam',
+      type: 'overleg',
+      date: new Date(2025, 8, 5), // 5 september
       time: '14:00',
       duration: 2,
-      type: 'onderhoud',
-      status: 'gepland',
-      projectId: 'HMT-2024-002'
-    },
-    {
-      id: 'APT-003',
-      title: 'Inspectie Nieuwe Installatie',
-      client: 'Piet Bakker',
-      location: 'Den Haag Zuid',
-      date: '2024-01-17',
-      time: '10:30',
-      duration: 1,
-      type: 'inspectie',
+      location: 'Rotterdam Zuid',
       status: 'bevestigd',
-      projectId: 'HMT-2024-003'
+      description: 'Overleg nieuwe project specificaties',
+      contact: 'Maria van der Berg',
+      phone: '06-87654321'
     },
     {
-      id: 'APT-004',
-      title: 'Overleg Project Details',
-      client: 'Lisa van der Berg',
-      location: 'Rotterdam Centrum',
-      date: '2024-01-18',
-      time: '15:00',
-      duration: 1,
-      type: 'overleg',
-      status: 'gepland'
+      id: 'APT-2025-003',
+      client: 'Projectontwikkelaar Utrecht',
+      type: 'inspectie',
+      date: new Date(2025, 8, 8), // 8 september
+      time: '10:30',
+      duration: 3,
+      location: 'Utrecht Leidsche Rijn',
+      status: 'in_behandeling',
+      description: 'Inspectie bestaande installaties',
+      contact: 'Peter Jansen',
+      phone: '06-11223344'
     },
     {
-      id: 'APT-005',
-      title: 'Plaatsing Nieuwe Deur',
-      client: 'Tom de Wit',
-      location: 'Eindhoven Noord',
-      date: '2024-01-19',
+      id: 'APT-2025-004',
+      client: 'Aannemer Den Haag',
+      type: 'onderhoud',
+      date: new Date(2025, 8, 12), // 12 september
       time: '08:00',
       duration: 6,
-      type: 'plaatsing',
+      location: 'Den Haag Centrum',
       status: 'bevestigd',
-      projectId: 'HMT-2024-004'
+      description: 'Onderhoud en reparatie taatsdeuren',
+      contact: 'Lisa Bakker',
+      phone: '06-55667788'
+    },
+    {
+      id: 'APT-2025-005',
+      client: 'Bouwbedrijf Amsterdam',
+      type: 'installatie',
+      date: new Date(2025, 8, 15), // 15 september
+      time: '13:00',
+      duration: 5,
+      location: 'Amsterdam Noord',
+      status: 'wachtend',
+      description: 'Installatie nieuwe schuifdeur systeem',
+      contact: 'Jan de Vries',
+      phone: '06-12345678'
+    },
+    {
+      id: 'APT-2025-006',
+      client: 'Architectenbureau Rotterdam',
+      type: 'overleg',
+      date: new Date(2025, 8, 18), // 18 september
+      time: '11:00',
+      duration: 2,
+      location: 'Rotterdam Centrum',
+      status: 'bevestigd',
+      description: 'Presentatie nieuwe productlijn',
+      contact: 'Maria van der Berg',
+      phone: '06-87654321'
+    },
+    {
+      id: 'APT-2025-007',
+      client: 'Projectontwikkelaar Utrecht',
+      type: 'installatie',
+      date: new Date(2025, 8, 22), // 22 september
+      time: '09:30',
+      duration: 4,
+      location: 'Utrecht Centrum',
+      status: 'in_behandeling',
+      description: 'Installatie complete deur set',
+      contact: 'Peter Jansen',
+      phone: '06-11223344'
+    },
+    {
+      id: 'APT-2025-008',
+      client: 'Aannemer Den Haag',
+      type: 'inspectie',
+      date: new Date(2025, 8, 25), // 25 september
+      time: '15:00',
+      duration: 2,
+      location: 'Den Haag Zuid',
+      status: 'bevestigd',
+      description: 'Kwaliteitscontrole na installatie',
+      contact: 'Lisa Bakker',
+      phone: '06-55667788'
+    },
+    {
+      id: 'APT-2025-009',
+      client: 'Bouwbedrijf Amsterdam',
+      type: 'onderhoud',
+      date: new Date(2025, 8, 28), // 28 september
+      time: '07:30',
+      duration: 3,
+      location: 'Amsterdam Zuid',
+      status: 'wachtend',
+      description: 'Preventief onderhoud schuifdeuren',
+      contact: 'Jan de Vries',
+      phone: '06-12345678'
+    },
+    {
+      id: 'APT-2025-010',
+      client: 'Architectenbureau Rotterdam',
+      type: 'installatie',
+      date: new Date(2025, 8, 30), // 30 september
+      time: '12:00',
+      duration: 6,
+      location: 'Rotterdam Noord',
+      status: 'bevestigd',
+      description: 'Installatie premium deur systeem',
+      contact: 'Maria van der Berg',
+      phone: '06-87654321'
     }
-  ]);
+  ];
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'plaatsing':
+      case 'installatie':
         return (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
           </svg>
         );
       case 'onderhoud':
@@ -109,46 +187,63 @@ export default function PlanningPage() {
       case 'overleg':
         return (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-2-2V10a2 2 0 012-2h2m2-4h6a2 2 0 012 2v6a2 2 0 01-2 2h-6l-4 4V8a2 2 0 012-2z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
           </svg>
         );
       default:
-        return (
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-        );
+        return null;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'bevestigd': return 'bg-green-600';
-      case 'gepland': return 'bg-blue-600';
-      case 'uitgevoerd': return 'bg-gray-600';
-      case 'geannuleerd': return 'bg-red-600';
-      default: return 'bg-gray-600';
+      case 'bevestigd':
+        return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'in_behandeling':
+        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'wachtend':
+        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'voltooid':
+        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+      default:
+        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'plaatsing': return 'text-blue-400';
-      case 'onderhoud': return 'text-yellow-400';
-      case 'inspectie': return 'text-green-400';
-      case 'overleg': return 'text-purple-400';
-      default: return 'text-gray-400';
+      case 'installatie':
+        return 'text-blue-400';
+      case 'onderhoud':
+        return 'text-orange-400';
+      case 'inspectie':
+        return 'text-purple-400';
+      case 'overleg':
+        return 'text-green-400';
+      default:
+        return 'text-gray-400';
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (date: Date) => {
     return date.toLocaleDateString('nl-NL', {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short'
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
+
+  const getAppointmentsForDate = (date: Date) => {
+    return appointments.filter(apt => 
+      apt.date.toDateString() === date.toDateString()
+    );
+  };
+
+  const next5Appointments = appointments
+    .filter(apt => apt.date >= new Date())
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .slice(0, 5);
 
   return (
     <div className="min-h-screen bg-black flex">
@@ -157,11 +252,10 @@ export default function PlanningPage() {
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
             <img 
-              src="/svg/hij-maakt-het.svg" 
-              alt="Hij Maakt Het Logo" 
+              src="/SVG/hij-maakt-het.svg" 
+              alt="Hij Maakt Het" 
               className="h-10 w-auto object-contain"
             />
-            <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
         </div>
 
@@ -185,7 +279,7 @@ export default function PlanningPage() {
                 className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
                 <span className="ml-3">Projecten</span>
               </a>
@@ -193,7 +287,7 @@ export default function PlanningPage() {
             <li>
               <a
                 href="/planning"
-                className="flex items-center px-3 py-2 text-white bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+                className="flex items-center px-3 py-2 text-white bg-gray-800 rounded-lg"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -218,7 +312,7 @@ export default function PlanningPage() {
                 className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
                 <span className="ml-3">Werkstations</span>
               </a>
@@ -229,7 +323,7 @@ export default function PlanningPage() {
                 className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 <span className="ml-3">Trello Sync</span>
               </a>
@@ -238,164 +332,298 @@ export default function PlanningPage() {
         </nav>
       </div>
 
-      {/* Main content */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col">
+        {/* Header */}
         <header className="bg-black border-b border-gray-800 px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-white">Planning</h1>
-            <button className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
-              Nieuwe Afspraak
-            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-white">Planning - September 2025</h1>
+              <p className="text-gray-400">Beheer je afspraken en planning</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex bg-gray-800 rounded-lg p-1">
+                <button
+                  onClick={() => setView('table')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    view === 'table' 
+                      ? 'bg-gray-700 text-white' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Tabel
+                </button>
+                <button
+                  onClick={() => setView('calendar')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    view === 'calendar' 
+                      ? 'bg-gray-700 text-white' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Kalender
+                </button>
+              </div>
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 p-6">
-          {/* Overview Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Main Content */}
+        <main className="flex-1 p-6 space-y-6 overflow-y-auto">
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
-              <div className="flex items-center">
-                <div className="p-2 bg-blue-600 rounded-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">Totaal Afspraken</p>
+                  <p className="text-3xl font-bold text-white">{totalAppointments}</p>
+                  <p className="text-sm text-blue-400">September 2025</p>
+                </div>
+                <div className="p-3 bg-blue-500/20 rounded-full">
+                  <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-400">Totaal Afspraken</p>
-                  <p className="text-2xl font-semibold text-white">{totalAppointments}</p>
-                </div>
               </div>
             </div>
 
             <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
-              <div className="flex items-center">
-                <div className="p-2 bg-green-600 rounded-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">Bevestigd</p>
+                  <p className="text-3xl font-bold text-white">{confirmedAppointments}</p>
+                  <p className="text-sm text-green-400">68% van totaal</p>
+                </div>
+                <div className="p-3 bg-green-500/20 rounded-full">
+                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-400">Bevestigd</p>
-                  <p className="text-2xl font-semibold text-white">{confirmedAppointments}</p>
-                </div>
               </div>
             </div>
 
             <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
-              <div className="flex items-center">
-                <div className="p-2 bg-yellow-600 rounded-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">In Behandeling</p>
+                  <p className="text-3xl font-bold text-white">{pendingAppointments}</p>
+                  <p className="text-sm text-yellow-400">32% van totaal</p>
+                </div>
+                <div className="p-3 bg-yellow-500/20 rounded-full">
+                  <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-400">In Behandeling</p>
-                  <p className="text-2xl font-semibold text-white">{pendingAppointments}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Upcoming Appointments Table */}
-          <div className="bg-black rounded-lg border border-gray-800 hover-lift animate-fade-in-up">
-            <div className="p-6 border-b border-gray-800">
-              <h2 className="text-xl font-semibold text-white">Eerstvolgende 5 Afspraken</h2>
-              <p className="text-gray-400 mt-1">Overzicht van komende plaatsingen en afspraken</p>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-800">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Datum & Tijd
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Afspraak
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Klant
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Locatie
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                      Duur
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-black divide-y divide-gray-800">
-                  {appointments.slice(0, 5).map((appointment, index) => (
-                    <tr key={appointment.id} className="hover:bg-gray-800 transition-colors animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-white font-medium">
-                          {formatDate(appointment.date)}
-                        </div>
-                        <div className="text-sm text-gray-400">
-                          {appointment.time}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className={`mr-3 ${getTypeColor(appointment.type)}`}>
-                            {getTypeIcon(appointment.type)}
+          {/* View Toggle Content */}
+          {view === 'table' ? (
+            /* Table View */
+            <div className="bg-black rounded-lg border border-gray-800 hover-lift animate-fade-in-up">
+              <div className="px-6 py-4 border-b border-gray-800">
+                <h3 className="text-lg font-semibold text-white">Volgende 5 Afspraken</h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-800">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Datum & Tijd</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Klant</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Locatie</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Contact</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-black divide-y divide-gray-800">
+                    {next5Appointments.map((appointment, index) => (
+                      <tr key={appointment.id} className="hover:bg-gray-800/50 transition-colors animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-white">{formatDate(appointment.date)}</div>
+                          <div className="text-sm text-gray-400">{appointment.time} ({appointment.duration}u)</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-white">{appointment.client}</div>
+                          <div className="text-sm text-gray-400">{appointment.description}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <span className={`mr-2 ${getTypeColor(appointment.type)}`}>
+                              {getTypeIcon(appointment.type)}
+                            </span>
+                            <span className="text-sm text-white capitalize">{appointment.type}</span>
                           </div>
-                          <div>
-                            <div className="text-sm text-white font-medium">
-                              {appointment.title}
-                            </div>
-                            {appointment.projectId && (
-                              <div className="text-sm text-gray-400">
-                                {appointment.projectId}
-                              </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                          {appointment.location}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${getStatusColor(appointment.status)}`}>
+                            {appointment.status.replace('_', ' ')}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-white">{appointment.contact}</div>
+                          <div className="text-sm text-gray-400">{appointment.phone}</div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : (
+            /* Calendar View */
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+                  <h3 className="text-lg font-semibold text-white mb-4">Kalender - September 2025</h3>
+                  <div className="calendar-container">
+                    <Calendar
+                      onChange={(value) => setSelectedDate(value as Date)}
+                      value={selectedDate}
+                      className="react-calendar"
+                      tileContent={({ date }) => {
+                        const dayAppointments = getAppointmentsForDate(date);
+                        return dayAppointments.length > 0 ? (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {dayAppointments.slice(0, 2).map((apt, index) => (
+                              <div
+                                key={index}
+                                className={`w-2 h-2 rounded-full ${
+                                  apt.type === 'installatie' ? 'bg-blue-500' :
+                                  apt.type === 'onderhoud' ? 'bg-orange-500' :
+                                  apt.type === 'inspectie' ? 'bg-purple-500' : 'bg-green-500'
+                                }`}
+                                title={`${apt.time} - ${apt.client}`}
+                              />
+                            ))}
+                            {dayAppointments.length > 2 && (
+                              <div className="w-2 h-2 rounded-full bg-gray-500" title={`+${dayAppointments.length - 2} meer`} />
                             )}
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-white">{appointment.client}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">{appointment.location}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getTypeColor(appointment.type)} bg-gray-700`}>
-                          {appointment.type}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getStatusColor(appointment.status)}`}>
-                          {appointment.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-300">{appointment.duration}u</div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                        ) : null;
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
 
-          {/* Calendar Placeholder */}
-          <div className="bg-black rounded-lg p-6 mt-8 border border-gray-800 hover-lift animate-fade-in-up">
-            <h3 className="text-lg font-semibold text-white mb-4">Kalender View</h3>
-            <div className="bg-gray-800 rounded-lg p-8 text-center">
-              <svg className="w-16 h-16 text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <p className="text-gray-400 text-lg">Kalender view komt binnenkort beschikbaar</p>
-              <p className="text-gray-500 text-sm mt-2">Hier wordt een volledige kalender weergave geïmplementeerd</p>
+              <div className="lg:col-span-1">
+                <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+                  <h3 className="text-lg font-semibold text-white mb-4">
+                    Afspraken - {formatDate(selectedDate)}
+                  </h3>
+                  <div className="space-y-3">
+                    {getAppointmentsForDate(selectedDate).length > 0 ? (
+                      getAppointmentsForDate(selectedDate).map((appointment) => (
+                        <div key={appointment.id} className="p-3 bg-gray-800 rounded-lg border border-gray-700">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center">
+                              <span className={`mr-2 ${getTypeColor(appointment.type)}`}>
+                                {getTypeIcon(appointment.type)}
+                              </span>
+                              <span className="text-sm font-medium text-white">{appointment.time}</span>
+                            </div>
+                            <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${getStatusColor(appointment.status)}`}>
+                              {appointment.status.replace('_', ' ')}
+                            </span>
+                          </div>
+                          <div className="text-sm text-white font-medium">{appointment.client}</div>
+                          <div className="text-xs text-gray-400">{appointment.description}</div>
+                          <div className="text-xs text-gray-400 mt-1">{appointment.location}</div>
+                          <div className="text-xs text-gray-400">{appointment.contact} - {appointment.phone}</div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8">
+                        <svg className="w-12 h-12 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <p className="text-gray-400">Geen afspraken op deze datum</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </main>
       </div>
+
+      <style jsx global>{`
+        .react-calendar {
+          background: #000000;
+          border: 1px solid #374151;
+          border-radius: 8px;
+          color: #F9FAFB;
+          font-family: inherit;
+        }
+        
+        .react-calendar__navigation {
+          background: #1F2937;
+          border-bottom: 1px solid #374151;
+        }
+        
+        .react-calendar__navigation button {
+          color: #F9FAFB;
+          background: none;
+          border: none;
+          font-size: 16px;
+          font-weight: 600;
+        }
+        
+        .react-calendar__navigation button:hover {
+          background: #374151;
+        }
+        
+        .react-calendar__navigation button:enabled:hover,
+        .react-calendar__navigation button:enabled:focus {
+          background: #374151;
+        }
+        
+        .react-calendar__month-view__weekdays {
+          background: #111827;
+          border-bottom: 1px solid #374151;
+        }
+        
+        .react-calendar__month-view__weekdays__weekday {
+          color: #9CA3AF;
+          font-weight: 600;
+          padding: 8px;
+        }
+        
+        .react-calendar__tile {
+          background: #000000;
+          border: 1px solid #374151;
+          color: #F9FAFB;
+          padding: 8px;
+        }
+        
+        .react-calendar__tile:hover {
+          background: #1F2937;
+        }
+        
+        .react-calendar__tile--active {
+          background: #3B82F6;
+          color: #FFFFFF;
+        }
+        
+        .react-calendar__tile--active:hover {
+          background: #2563EB;
+        }
+        
+        .react-calendar__tile--now {
+          background: #1F2937;
+          color: #F9FAFB;
+        }
+        
+        .react-calendar__tile--now:hover {
+          background: #374151;
+        }
+      `}</style>
     </div>
   );
 }

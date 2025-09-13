@@ -24,11 +24,11 @@ export default function LoginPage() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="mx-auto mb-6 flex justify-center">
-            <img 
-              src="/svg/hij-maakt-het.svg" 
-              alt="Hij Maakt Het Logo" 
-              className="h-24 w-auto object-contain"
-            />
+        <img 
+          src="/SVG/hij-maakt-het.svg" 
+          alt="Hij Maakt Het" 
+          className="h-24 w-auto object-contain"
+        />
           </div>
           <h2 className="text-center text-3xl font-bold text-white">
             Welkom bij Hij Maakt Het

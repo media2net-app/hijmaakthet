@@ -15,6 +15,7 @@ interface Project {
 }
 
 export default function ProjectenPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar state
   const [projects, setProjects] = useState<Project[]>([
     {
       id: 'HMT-2024-001',
@@ -161,16 +162,28 @@ export default function ProjectenPage() {
 
   return (
     <div className="min-h-screen bg-black flex">
-      {/* Sidebar - zelfde als dashboard */}
-      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        w-64 bg-black flex flex-col border-r border-gray-800
+        fixed lg:relative z-50 h-full
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        transition-transform duration-300
+      `}>
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
             <img 
-              src="/svg/hij-maakt-het.svg" 
-              alt="Hij Maakt Het Logo" 
+              src="/SVG/hij-maakt-het.svg" 
+              alt="Hij Maakt Het" 
               className="h-10 w-auto object-contain"
             />
-            <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
         </div>
 
@@ -261,21 +274,34 @@ export default function ProjectenPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-black border-b border-gray-800 px-6 py-4">
+        <header className="bg-black border-b border-gray-800 px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-white">Projecten</h1>
+            <div className="flex items-center space-x-4">
+              {/* Mobile Hamburger Menu */}
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              
+              <h1 className="text-xl lg:text-2xl font-bold text-white">Projecten</h1>
+            </div>
+            
             <button
               onClick={() => setShowNewProject(true)}
-              className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+              className="px-3 lg:px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm lg:text-base"
             >
               Nieuw Project
             </button>
           </div>
         </header>
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 lg:p-6">
           {/* Projecten grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
             {projects.map((project, index) => (
               <div key={project.id} className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up" style={{ animationDelay: `${index * 150}ms` }}>
                 <div className="flex items-center justify-between mb-4">
@@ -303,8 +329,7 @@ export default function ProjectenPage() {
                         <img 
                           src={qrCodes[project.id]} 
                           alt={`QR Code voor ${project.id}`}
-                          className="mx-auto"
-                          style={{ width: '120px', height: '120px' }}
+                          className="mx-auto w-20 h-20 sm:w-24 sm:h-24 lg:w-30 lg:h-30"
                         />
                         <div className="text-xs text-gray-600 mt-1">Scan om project te bekijken</div>
                       </div>

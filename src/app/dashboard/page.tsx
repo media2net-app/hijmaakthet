@@ -1,31 +1,106 @@
 'use client';
 
-import { useState } from 'react';
-import { useAnimatedCounter } from '../../hooks/useAnimatedCounter';
+import { useState, useEffect } from 'react';
+import { useAnimatedCounter } from '@/hooks/useAnimatedCounter';
+import { 
+  AreaChart, 
+  Area, 
+  BarChart, 
+  Bar, 
+  PieChart, 
+  Pie, 
+  Cell,
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  Legend
+} from 'recharts';
 
 export default function DashboardPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Start closed on mobile
+  const [currentTime, setCurrentTime] = useState(new Date());
+
   // Animated counters
-  const activeProjects = useAnimatedCounter(12, 1500);
-  const completedProjects = useAnimatedCounter(8, 2000);
-  const totalRevenue = useAnimatedCounter(45000, 2500);
+  const totalUsers = useAnimatedCounter(127);
+  const totalProjects = useAnimatedCounter(89);
+  const monthlyRevenue = useAnimatedCounter(245000);
+  const efficiency = useAnimatedCounter(94);
+
+  // Update time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Chart data
+  const revenueData = [
+    { month: 'Jan', revenue: 180000, orders: 45 },
+    { month: 'Feb', revenue: 220000, orders: 52 },
+    { month: 'Mar', revenue: 195000, orders: 48 },
+    { month: 'Apr', revenue: 245000, orders: 61 },
+    { month: 'Mei', revenue: 280000, orders: 68 },
+    { month: 'Jun', revenue: 265000, orders: 64 }
+  ];
+
+  const projectStatusData = [
+    { name: 'Voltooid', value: 45, color: '#10B981' },
+    { name: 'In Productie', value: 23, color: '#3B82F6' },
+    { name: 'Wachtend', value: 12, color: '#F59E0B' },
+    { name: 'Geannuleerd', value: 3, color: '#EF4444' }
+  ];
+
+  const workstationData = [
+    { name: 'Lasafdeling', efficiency: 95, capacity: 88, orders: 24 },
+    { name: 'Montage', efficiency: 92, capacity: 76, orders: 18 },
+    { name: 'Afwerking', efficiency: 89, capacity: 82, orders: 21 },
+    { name: 'Kwaliteit', efficiency: 98, capacity: 90, orders: 15 },
+    { name: 'Verpakking', efficiency: 94, capacity: 85, orders: 19 }
+  ];
+
+  const recentActivity = [
+    { id: 1, type: 'order', message: 'Nieuwe order HMT-2024-089 ontvangen', time: '2 min geleden', status: 'success' },
+    { id: 2, type: 'production', message: 'Project HMT-2024-075 voltooid in Lasafdeling', time: '15 min geleden', status: 'info' },
+    { id: 3, type: 'quality', message: 'Kwaliteitscontrole HMT-2024-071 goedgekeurd', time: '32 min geleden', status: 'success' },
+    { id: 4, type: 'delivery', message: 'Levering HMT-2024-068 verzonden', time: '1 uur geleden', status: 'info' },
+    { id: 5, type: 'alert', message: 'Onderhoud Lasafdeling gepland voor morgen', time: '2 uur geleden', status: 'warning' }
+  ];
+
+  const topClients = [
+    { name: 'Bouwbedrijf Amsterdam', orders: 12, revenue: 45000, status: 'active' },
+    { name: 'Architectenbureau Rotterdam', orders: 8, revenue: 32000, status: 'active' },
+    { name: 'Projectontwikkelaar Utrecht', orders: 6, revenue: 28000, status: 'pending' },
+    { name: 'Aannemer Den Haag', orders: 5, revenue: 22000, status: 'active' }
+  ];
 
   return (
     <div className="min-h-screen bg-black flex">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-black transition-all duration-300 flex flex-col border-r border-gray-800`}>
+      <div className={`
+        ${sidebarOpen ? 'w-64' : 'w-16'} 
+        bg-black transition-all duration-300 flex flex-col border-r border-gray-800
+        fixed lg:relative z-50 h-full
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
         {/* Logo */}
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
             <img 
-              src="/svg/hij-maakt-het.svg" 
-              alt="Hij Maakt Het Logo" 
+              src="/SVG/hij-maakt-het.svg" 
+              alt="Hij Maakt Het" 
               className="h-10 w-auto object-contain"
             />
-            {sidebarOpen && (
-              <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
-            )}
           </div>
         </div>
 
@@ -50,7 +125,7 @@ export default function DashboardPage() {
                 className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
                 {sidebarOpen && <span className="ml-3">Projecten</span>}
               </a>
@@ -83,7 +158,7 @@ export default function DashboardPage() {
                 className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
                 {sidebarOpen && <span className="ml-3">Werkstations</span>}
               </a>
@@ -94,7 +169,7 @@ export default function DashboardPage() {
                 className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 {sidebarOpen && <span className="ml-3">Trello Sync</span>}
               </a>
@@ -102,90 +177,245 @@ export default function DashboardPage() {
           </ul>
         </nav>
 
-        {/* Toggle button */}
-        <div className="p-4 border-t border-gray-700">
+        {/* Sidebar Toggle */}
+        <div className="p-4 border-t border-gray-800">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="w-full flex items-center justify-center px-3 py-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            className="w-full flex items-center justify-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
             </svg>
-            {sidebarOpen && <span className="ml-3">Inklappen</span>}
           </button>
         </div>
       </div>
 
-      {/* Main content */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-black border-b border-gray-800 px-6 py-4">
+        <header className="bg-black border-b border-gray-800 px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-white">Dashboard</h1>
             <div className="flex items-center space-x-4">
+              {/* Mobile Hamburger Menu */}
               <button
-                onClick={() => window.location.href = '/'}
-                className="px-4 py-2 text-white bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors border border-gray-600"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
               >
-                Uitloggen
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
               </button>
+              
+              <div>
+                <h1 className="text-xl lg:text-2xl font-bold text-white">Dashboard 2.0</h1>
+                <p className="text-sm lg:text-base text-gray-400 hidden sm:block">Welkom terug! Hier is een overzicht van je bedrijf.</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2 lg:space-x-4">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm text-gray-400">Live tijd</p>
+                <p className="text-lg font-mono text-white">
+                  {currentTime.toLocaleTimeString('nl-NL')}
+                </p>
+              </div>
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
             </div>
           </div>
         </header>
 
-        {/* Dashboard content */}
-        <main className="flex-1 p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Welcome card */}
-            <div className="bg-black rounded-lg p-6 col-span-full border border-gray-800 hover-lift animate-fade-in-up">
-              <h2 className="text-xl font-semibold text-white mb-2">
-                Welkom bij Hij Maakt Het Dashboard
-              </h2>
-              <p className="text-gray-400">
-                Je bent succesvol ingelogd met de demo account. Hier kun je alle functionaliteiten van het systeem beheren.
-              </p>
-            </div>
-
-            {/* Stats cards */}
+        {/* Dashboard Content */}
+        <main className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-y-auto">
+          {/* KPI Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
-              <div className="flex items-center">
-                <div className="p-2 bg-blue-600 rounded-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">Totaal Gebruikers</p>
+                  <p className="text-3xl font-bold text-white">{totalUsers}</p>
+                  <p className="text-sm text-green-400">+12% deze maand</p>
+                </div>
+                <div className="p-3 bg-blue-500/20 rounded-full">
+                  <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                   </svg>
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-400">Gebruikers</p>
-                  <p className="text-2xl font-semibold text-white">{activeProjects.toLocaleString()}</p>
-                </div>
               </div>
             </div>
 
             <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
-              <div className="flex items-center">
-                <div className="p-2 bg-green-600 rounded-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">Actieve Projecten</p>
+                  <p className="text-3xl font-bold text-white">{totalProjects}</p>
+                  <p className="text-sm text-blue-400">+8% deze week</p>
+                </div>
+                <div className="p-3 bg-green-500/20 rounded-full">
+                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-400">Projecten</p>
-                  <p className="text-2xl font-semibold text-white">{completedProjects}</p>
-                </div>
               </div>
             </div>
 
             <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
-              <div className="flex items-center">
-                <div className="p-2 bg-yellow-600 rounded-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">Maandelijkse Omzet</p>
+                  <p className="text-3xl font-bold text-white">€{monthlyRevenue.toLocaleString()}</p>
+                  <p className="text-sm text-green-400">+15% vs vorige maand</p>
+                </div>
+                <div className="p-3 bg-yellow-500/20 rounded-full">
+                  <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                   </svg>
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-400">Omzet</p>
-                  <p className="text-2xl font-semibold text-white">€{totalRevenue.toLocaleString()}</p>
+              </div>
+            </div>
+
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-400">Efficiëntie Score</p>
+                  <p className="text-3xl font-bold text-white">{efficiency}%</p>
+                  <p className="text-sm text-green-400">+3% deze week</p>
                 </div>
+                <div className="p-3 bg-purple-500/20 rounded-full">
+                  <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Charts Row */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
+            {/* Revenue Chart */}
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+              <h3 className="text-lg font-semibold text-white mb-4">Omzet Trend</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={revenueData}>
+                  <defs>
+                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="month" stroke="#6B7280" />
+                  <YAxis stroke="#6B7280" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px',
+                      color: '#F9FAFB'
+                    }} 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="revenue" 
+                    stroke="#3B82F6" 
+                    fillOpacity={1} 
+                    fill="url(#colorRevenue)" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Project Status Pie Chart */}
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+              <h3 className="text-lg font-semibold text-white mb-4">Project Status</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={projectStatusData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {projectStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px',
+                      color: '#F9FAFB'
+                    }} 
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Workstation Performance */}
+          <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+            <h3 className="text-lg font-semibold text-white mb-4">Werkstation Prestaties</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={workstationData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="name" stroke="#6B7280" />
+                <YAxis stroke="#6B7280" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                    color: '#F9FAFB'
+                  }} 
+                />
+                <Bar dataKey="efficiency" fill="#10B981" name="Efficiëntie %" />
+                <Bar dataKey="capacity" fill="#3B82F6" name="Capaciteit %" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Bottom Row */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
+            {/* Recent Activity */}
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+              <h3 className="text-lg font-semibold text-white mb-4">Recente Activiteit</h3>
+              <div className="space-y-4">
+                {recentActivity.map((activity) => (
+                  <div key={activity.id} className="flex items-start space-x-3">
+                    <div className={`w-2 h-2 rounded-full mt-2 ${
+                      activity.status === 'success' ? 'bg-green-500' :
+                      activity.status === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+                    }`}></div>
+                    <div className="flex-1">
+                      <p className="text-sm text-white">{activity.message}</p>
+                      <p className="text-xs text-gray-400">{activity.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Top Clients */}
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+              <h3 className="text-lg font-semibold text-white mb-4">Top Klanten</h3>
+              <div className="space-y-4">
+                {topClients.map((client, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-white">{client.name}</p>
+                      <p className="text-xs text-gray-400">{client.orders} orders • €{client.revenue.toLocaleString()}</p>
+                    </div>
+                    <div className={`px-2 py-1 rounded-full text-xs ${
+                      client.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
+                    }`}>
+                      {client.status === 'active' ? 'Actief' : 'Wachtend'}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

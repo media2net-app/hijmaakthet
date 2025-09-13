@@ -159,8 +159,8 @@ export default function QRDetailPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <img 
-              src="/svg/hij-maakt-het.svg" 
-              alt="Hij Maakt Het Logo" 
+              src="/SVG/hij-maakt-het.svg" 
+              alt="Hij Maakt Het" 
               className="h-10 w-auto object-contain mr-3"
             />
             <h1 className="text-2xl font-bold text-white">Project Details</h1>
