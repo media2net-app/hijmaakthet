@@ -153,18 +153,16 @@ export default function QRDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-black">
       {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+      <div className="bg-black border-b border-gray-800 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center mr-3 p-1 border border-gray-600">
-              <img 
-                src="/svg/hij-maakt-het.svg" 
-                alt="Hij Maakt Het Logo" 
-                className="h-full w-full object-contain"
-              />
-            </div>
+            <img 
+              src="/svg/hij-maakt-het.svg" 
+              alt="Hij Maakt Het Logo" 
+              className="h-10 w-auto object-contain mr-3"
+            />
             <h1 className="text-2xl font-bold text-white">Project Details</h1>
           </div>
           <button
@@ -178,7 +176,7 @@ export default function QRDetailPage() {
 
       <div className="max-w-4xl mx-auto p-6">
         {/* Project Info Card */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+        <div className="bg-black rounded-lg p-6 mb-6 border border-gray-800">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center">
               <div className="text-blue-400 mr-4">
@@ -248,7 +246,7 @@ export default function QRDetailPage() {
         </div>
 
         {/* Actions Card */}
-        <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <div className="bg-black rounded-lg p-6 border border-gray-800">
           <h3 className="text-lg font-semibold text-white mb-4">Project Acties</h3>
           
           {updateMessage && (
@@ -321,7 +319,7 @@ export default function QRDetailPage() {
         </div>
 
         {/* QR Code Info */}
-        <div className="bg-gray-800 rounded-lg p-6 mt-6 border border-gray-700">
+        <div className="bg-black rounded-lg p-6 mt-6 border border-gray-800">
           <h3 className="text-lg font-semibold text-white mb-3">QR Code Informatie</h3>
           <div className="text-gray-400 text-sm">
             <p>Deze pagina is bereikbaar via QR code: <span className="text-white font-mono">{project.id}</span></p>

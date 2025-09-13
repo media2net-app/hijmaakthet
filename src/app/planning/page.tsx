@@ -151,18 +151,16 @@ export default function PlanningPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
+    <div className="min-h-screen bg-black flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 flex flex-col border-r border-gray-700">
-        <div className="p-4 border-b border-gray-700">
+      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+        <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center p-1 border border-gray-600">
-              <img 
-                src="/svg/hij-maakt-het.svg" 
-                alt="Hij Maakt Het Logo" 
-                className="h-full w-full object-contain"
-              />
-            </div>
+            <img 
+              src="/svg/hij-maakt-het.svg" 
+              alt="Hij Maakt Het Logo" 
+              className="h-10 w-auto object-contain"
+            />
             <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
         </div>
@@ -242,7 +240,7 @@ export default function PlanningPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+        <header className="bg-black border-b border-gray-800 px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Planning</h1>
             <button className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
@@ -254,7 +252,7 @@ export default function PlanningPage() {
         <main className="flex-1 p-6">
           {/* Overview Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-blue-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -268,7 +266,7 @@ export default function PlanningPage() {
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-green-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -282,7 +280,7 @@ export default function PlanningPage() {
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-yellow-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -298,15 +296,15 @@ export default function PlanningPage() {
           </div>
 
           {/* Upcoming Appointments Table */}
-          <div className="bg-gray-800 rounded-lg border border-gray-700 hover-lift animate-fade-in-up">
-            <div className="p-6 border-b border-gray-700">
+          <div className="bg-black rounded-lg border border-gray-800 hover-lift animate-fade-in-up">
+            <div className="p-6 border-b border-gray-800">
               <h2 className="text-xl font-semibold text-white">Eerstvolgende 5 Afspraken</h2>
               <p className="text-gray-400 mt-1">Overzicht van komende plaatsingen en afspraken</p>
             </div>
             
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-700">
+                <thead className="bg-gray-800">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                       Datum & Tijd
@@ -331,9 +329,9 @@ export default function PlanningPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-gray-800 divide-y divide-gray-700">
+                <tbody className="bg-black divide-y divide-gray-800">
                   {appointments.slice(0, 5).map((appointment, index) => (
-                    <tr key={appointment.id} className="hover:bg-gray-700 transition-colors animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                    <tr key={appointment.id} className="hover:bg-gray-800 transition-colors animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-white font-medium">
                           {formatDate(appointment.date)}
@@ -386,9 +384,9 @@ export default function PlanningPage() {
           </div>
 
           {/* Calendar Placeholder */}
-          <div className="bg-gray-800 rounded-lg p-6 mt-8 border border-gray-700 hover-lift animate-fade-in-up">
+          <div className="bg-black rounded-lg p-6 mt-8 border border-gray-800 hover-lift animate-fade-in-up">
             <h3 className="text-lg font-semibold text-white mb-4">Kalender View</h3>
-            <div className="bg-gray-700 rounded-lg p-8 text-center">
+            <div className="bg-gray-800 rounded-lg p-8 text-center">
               <svg className="w-16 h-16 text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>

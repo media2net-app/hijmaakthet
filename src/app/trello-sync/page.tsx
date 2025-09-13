@@ -93,18 +93,16 @@ export default function TrelloSyncPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
+    <div className="min-h-screen bg-black flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 flex flex-col border-r border-gray-700">
-        <div className="p-4 border-b border-gray-700">
+      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+        <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center p-1 border border-gray-600">
-              <img 
-                src="/svg/hij-maakt-het.svg" 
-                alt="Hij Maakt Het Logo" 
-                className="h-full w-full object-contain"
-              />
-            </div>
+            <img 
+              src="/svg/hij-maakt-het.svg" 
+              alt="Hij Maakt Het Logo" 
+              className="h-10 w-auto object-contain"
+            />
             <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
         </div>
@@ -196,14 +194,14 @@ export default function TrelloSyncPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+        <header className="bg-black border-b border-gray-800 px-6 py-4">
           <h1 className="text-2xl font-bold text-white">Trello Synchronisatie</h1>
         </header>
 
         <main className="flex-1 p-6">
           <div className="max-w-4xl mx-auto">
             {/* Connection Status */}
-            <div className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+            <div className="bg-black rounded-lg p-6 mb-6 border border-gray-800">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold text-white">Trello Verbinding</h2>
                 <div className={`px-3 py-1 rounded-full text-sm ${
@@ -296,7 +294,7 @@ export default function TrelloSyncPage() {
 
             {/* Trello Cards */}
             {isConnected && selectedBoard && (
-              <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <div className="bg-black rounded-lg p-6 border border-gray-800">
                 <h3 className="text-lg font-semibold text-white mb-4">Trello Kaarten</h3>
                 
                 <div className="space-y-4">
@@ -354,7 +352,7 @@ export default function TrelloSyncPage() {
             )}
 
             {/* Help Section */}
-            <div className="bg-gray-800 rounded-lg p-6 mt-6 border border-gray-700">
+            <div className="bg-black rounded-lg p-6 mt-6 border border-gray-800">
               <h3 className="text-lg font-semibold text-white mb-4">Hoe krijg ik mijn Trello API gegevens?</h3>
               <div className="space-y-3 text-gray-300">
                 <p>1. Ga naar <a href="https://trello.com/app-key" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">trello.com/app-key</a></p>

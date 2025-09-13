@@ -160,18 +160,16 @@ export default function ProjectenPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
+    <div className="min-h-screen bg-black flex">
       {/* Sidebar - zelfde als dashboard */}
-      <div className="w-64 bg-gray-800 flex flex-col border-r border-gray-700">
-        <div className="p-4 border-b border-gray-700">
+      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+        <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center p-1 border border-gray-600">
-              <img 
-                src="/svg/hij-maakt-het.svg" 
-                alt="Hij Maakt Het Logo" 
-                className="h-full w-full object-contain"
-              />
-            </div>
+            <img 
+              src="/svg/hij-maakt-het.svg" 
+              alt="Hij Maakt Het Logo" 
+              className="h-10 w-auto object-contain"
+            />
             <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
         </div>
@@ -263,7 +261,7 @@ export default function ProjectenPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+        <header className="bg-black border-b border-gray-800 px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Projecten</h1>
             <button
@@ -279,7 +277,7 @@ export default function ProjectenPage() {
           {/* Projecten grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project, index) => (
-              <div key={project.id} className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up" style={{ animationDelay: `${index * 150}ms` }}>
+              <div key={project.id} className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up" style={{ animationDelay: `${index * 150}ms` }}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">
                     {getTypeIcon(project.type)}
@@ -327,7 +325,7 @@ export default function ProjectenPage() {
       {/* New Project Modal */}
       {showNewProject && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md border border-gray-700">
+          <div className="bg-black rounded-lg p-6 w-full max-w-md border border-gray-800">
             <h2 className="text-xl font-bold text-white mb-4">Nieuw Project</h2>
             
             <div className="space-y-4">

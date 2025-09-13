@@ -20,14 +20,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <div className="mx-auto h-20 w-20 bg-gray-800 rounded-full flex items-center justify-center mb-6 p-2 border border-gray-700">
+          <div className="mx-auto mb-6 flex justify-center">
             <img 
               src="/svg/hij-maakt-het.svg" 
               alt="Hij Maakt Het Logo" 
-              className="h-full w-full object-contain"
+              className="h-24 w-auto object-contain"
             />
           </div>
           <h2 className="text-center text-3xl font-bold text-white">

@@ -12,19 +12,17 @@ export default function DashboardPage() {
   const totalRevenue = useAnimatedCounter(45000, 2500);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
+    <div className="min-h-screen bg-black flex">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-gray-800 transition-all duration-300 flex flex-col border-r border-gray-700`}>
+      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-black transition-all duration-300 flex flex-col border-r border-gray-800`}>
         {/* Logo */}
-        <div className="p-4 border-b border-gray-700">
+        <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center p-1 border border-gray-600">
-              <img 
-                src="/svg/hij-maakt-het.svg" 
-                alt="Hij Maakt Het Logo" 
-                className="h-full w-full object-contain"
-              />
-            </div>
+            <img 
+              src="/svg/hij-maakt-het.svg" 
+              alt="Hij Maakt Het Logo" 
+              className="h-10 w-auto object-contain"
+            />
             {sidebarOpen && (
               <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
             )}
@@ -121,7 +119,7 @@ export default function DashboardPage() {
       {/* Main content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
+        <header className="bg-black border-b border-gray-800 px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Dashboard</h1>
             <div className="flex items-center space-x-4">
@@ -139,7 +137,7 @@ export default function DashboardPage() {
         <main className="flex-1 p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Welcome card */}
-            <div className="bg-gray-800 rounded-lg p-6 col-span-full border border-gray-700 hover-lift animate-fade-in-up">
+            <div className="bg-black rounded-lg p-6 col-span-full border border-gray-800 hover-lift animate-fade-in-up">
               <h2 className="text-xl font-semibold text-white mb-2">
                 Welkom bij Hij Maakt Het Dashboard
               </h2>
@@ -149,7 +147,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Stats cards */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-blue-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,7 +161,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-green-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,7 +175,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
+            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-yellow-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

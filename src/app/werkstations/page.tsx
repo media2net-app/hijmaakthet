@@ -184,18 +184,16 @@ export default function WerkstationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex">
+    <div className="min-h-screen bg-black flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 flex flex-col border-r border-gray-700">
-        <div className="p-4 border-b border-gray-700">
+      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+        <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center p-1 border border-gray-600">
-              <img 
-                src="/svg/hij-maakt-het.svg" 
-                alt="Hij Maakt Het Logo" 
-                className="h-full w-full object-contain"
-              />
-            </div>
+            <img 
+              src="/svg/hij-maakt-het.svg" 
+              alt="Hij Maakt Het Logo" 
+              className="h-10 w-auto object-contain"
+            />
             <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
         </div>
@@ -427,8 +425,10 @@ export default function WerkstationsPage() {
               {workstations.map((workstation, index) => (
                 <div key={workstation.id} className="flex items-center">
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-2">
-                      <span className="text-2xl">{workstation.icon}</span>
+                    <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-2">
+                      <div className="text-blue-400">
+                        {getWorkstationIcon(workstation.icon)}
+                      </div>
                     </div>
                     <div className="text-white text-sm font-medium">{workstation.name}</div>
                     <div className="text-gray-400 text-xs">{workstation.currentProjects} projecten</div>
