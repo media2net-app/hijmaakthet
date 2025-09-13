@@ -160,13 +160,17 @@ export default function ProjectenPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex">
+    <div className="min-h-screen bg-gray-900 flex">
       {/* Sidebar - zelfde als dashboard */}
-      <div className="w-64 bg-gray-900 flex flex-col">
+      <div className="w-64 bg-gray-800 flex flex-col border-r border-gray-700">
         <div className="p-4 border-b border-gray-700">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-white rounded-full flex items-center justify-center">
-              <span className="text-black font-bold text-sm">HMT</span>
+            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center p-1 border border-gray-600">
+              <img 
+                src="/svg/hij-maakt-het.svg" 
+                alt="Hij Maakt Het Logo" 
+                className="h-full w-full object-contain"
+              />
             </div>
             <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
@@ -195,6 +199,17 @@ export default function ProjectenPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
                 <span className="ml-3">Projecten</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/planning"
+                className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="ml-3">Planning</span>
               </a>
             </li>
             <li>
@@ -248,7 +263,7 @@ export default function ProjectenPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-gray-900 border-b border-gray-700 px-6 py-4">
+        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Projecten</h1>
             <button
@@ -263,8 +278,8 @@ export default function ProjectenPage() {
         <main className="flex-1 p-6">
           {/* Projecten grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => (
-              <div key={project.id} className="bg-gray-800 rounded-lg p-6">
+            {projects.map((project, index) => (
+              <div key={project.id} className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up" style={{ animationDelay: `${index * 150}ms` }}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">
                     {getTypeIcon(project.type)}
@@ -312,7 +327,7 @@ export default function ProjectenPage() {
       {/* New Project Modal */}
       {showNewProject && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md">
+          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md border border-gray-700">
             <h2 className="text-xl font-bold text-white mb-4">Nieuw Project</h2>
             
             <div className="space-y-4">
@@ -322,7 +337,7 @@ export default function ProjectenPage() {
                   type="text"
                   value={newProject.name}
                   onChange={(e) => setNewProject({...newProject, name: e.target.value})}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Bijv. Schuifdeur Woning Amsterdam"
                 />
               </div>
@@ -332,7 +347,7 @@ export default function ProjectenPage() {
                 <select
                   value={newProject.type}
                   onChange={(e) => setNewProject({...newProject, type: e.target.value as 'schuifdeur' | 'taatsdeur' | 'ander'})}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="schuifdeur">Schuifdeur</option>
                   <option value="taatsdeur">Taatsdeur</option>
@@ -346,7 +361,7 @@ export default function ProjectenPage() {
                   type="text"
                   value={newProject.client}
                   onChange={(e) => setNewProject({...newProject, client: e.target.value})}
-                  className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Klantnaam"
                 />
               </div>

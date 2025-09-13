@@ -1,19 +1,29 @@
 'use client';
 
 import { useState } from 'react';
+import { useAnimatedCounter } from '../../hooks/useAnimatedCounter';
 
 export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  
+  // Animated counters
+  const activeProjects = useAnimatedCounter(12, 1500);
+  const completedProjects = useAnimatedCounter(8, 2000);
+  const totalRevenue = useAnimatedCounter(45000, 2500);
 
   return (
-    <div className="min-h-screen bg-black flex">
+    <div className="min-h-screen bg-gray-900 flex">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-gray-900 transition-all duration-300 flex flex-col`}>
+      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-gray-800 transition-all duration-300 flex flex-col border-r border-gray-700`}>
         {/* Logo */}
         <div className="p-4 border-b border-gray-700">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-white rounded-full flex items-center justify-center">
-              <span className="text-black font-bold text-sm">HMT</span>
+            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center p-1 border border-gray-600">
+              <img 
+                src="/svg/hij-maakt-het.svg" 
+                alt="Hij Maakt Het Logo" 
+                className="h-full w-full object-contain"
+              />
             </div>
             {sidebarOpen && (
               <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
@@ -45,6 +55,17 @@ export default function DashboardPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
                 {sidebarOpen && <span className="ml-3">Projecten</span>}
+              </a>
+            </li>
+            <li>
+              <a
+                href="/planning"
+                className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                {sidebarOpen && <span className="ml-3">Planning</span>}
               </a>
             </li>
             <li>
@@ -100,13 +121,13 @@ export default function DashboardPage() {
       {/* Main content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-gray-900 border-b border-gray-700 px-6 py-4">
+        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Dashboard</h1>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => window.location.href = '/'}
-                className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                className="px-4 py-2 text-white bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors border border-gray-600"
               >
                 Uitloggen
               </button>
@@ -118,7 +139,7 @@ export default function DashboardPage() {
         <main className="flex-1 p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Welcome card */}
-            <div className="bg-gray-800 rounded-lg p-6 col-span-full">
+            <div className="bg-gray-800 rounded-lg p-6 col-span-full border border-gray-700 hover-lift animate-fade-in-up">
               <h2 className="text-xl font-semibold text-white mb-2">
                 Welkom bij Hij Maakt Het Dashboard
               </h2>
@@ -128,7 +149,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Stats cards */}
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-blue-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,12 +158,12 @@ export default function DashboardPage() {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-400">Gebruikers</p>
-                  <p className="text-2xl font-semibold text-white">1,234</p>
+                  <p className="text-2xl font-semibold text-white">{activeProjects.toLocaleString()}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-green-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,12 +172,12 @@ export default function DashboardPage() {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-400">Projecten</p>
-                  <p className="text-2xl font-semibold text-white">89</p>
+                  <p className="text-2xl font-semibold text-white">{completedProjects}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-yellow-600 rounded-lg">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,7 +186,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-400">Omzet</p>
-                  <p className="text-2xl font-semibold text-white">€45,678</p>
+                  <p className="text-2xl font-semibold text-white">€{totalRevenue.toLocaleString()}</p>
                 </div>
               </div>
             </div>

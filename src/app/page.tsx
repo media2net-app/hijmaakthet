@@ -20,17 +20,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <div className="mx-auto h-20 w-20 bg-white rounded-full flex items-center justify-center mb-6">
-            {/* Placeholder voor logo - wordt later vervangen */}
-            <span className="text-black font-bold text-2xl">HMT</span>
+          <div className="mx-auto h-20 w-20 bg-gray-800 rounded-full flex items-center justify-center mb-6 p-2 border border-gray-700">
+            <img 
+              src="/svg/hij-maakt-het.svg" 
+              alt="Hij Maakt Het Logo" 
+              className="h-full w-full object-contain"
+            />
           </div>
           <h2 className="text-center text-3xl font-bold text-white">
             Welkom bij Hij Maakt Het
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-400">
+          <p className="mt-2 text-center text-sm text-gray-300">
             Log in op je account
           </p>
         </div>
@@ -49,7 +52,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-600 placeholder-gray-400 text-white bg-gray-800 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent focus:z-10 sm:text-sm"
+                className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-600 placeholder-gray-400 text-white bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="je@email.nl"
               />
             </div>
@@ -66,7 +69,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-600 placeholder-gray-400 text-white bg-gray-800 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent focus:z-10 sm:text-sm"
+                className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-600 placeholder-gray-400 text-white bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Je wachtwoord"
               />
             </div>
@@ -78,7 +81,7 @@ export default function LoginPage() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 text-white focus:ring-white border-gray-600 rounded bg-gray-800"
+                className="h-4 w-4 text-blue-500 focus:ring-blue-500 border-gray-600 rounded bg-gray-800"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
                 Onthoud mij
@@ -96,11 +99,11 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-black bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? (
                 <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-black mr-2"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                   Inloggen...
                 </div>
               ) : (

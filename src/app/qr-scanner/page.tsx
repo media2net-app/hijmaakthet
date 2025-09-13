@@ -121,13 +121,17 @@ export default function QRScannerPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black flex">
+    <div className="min-h-screen bg-gray-900 flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-900 flex flex-col">
+      <div className="w-64 bg-gray-800 flex flex-col border-r border-gray-700">
         <div className="p-4 border-b border-gray-700">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-white rounded-full flex items-center justify-center">
-              <span className="text-black font-bold text-sm">HMT</span>
+            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center p-1 border border-gray-600">
+              <img 
+                src="/svg/hij-maakt-het.svg" 
+                alt="Hij Maakt Het Logo" 
+                className="h-full w-full object-contain"
+              />
             </div>
             <span className="ml-3 text-white font-bold text-lg">Hij Maakt Het</span>
           </div>
@@ -156,6 +160,17 @@ export default function QRScannerPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
                 <span className="ml-3">Projecten</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/planning"
+                className="flex items-center px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="ml-3">Planning</span>
               </a>
             </li>
             <li>
@@ -209,14 +224,14 @@ export default function QRScannerPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-gray-900 border-b border-gray-700 px-6 py-4">
+        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
           <h1 className="text-2xl font-bold text-white">QR Code Scanner</h1>
         </header>
 
         <main className="flex-1 p-6">
           <div className="max-w-4xl mx-auto">
             {/* Camera Scanner */}
-            <div className="bg-gray-800 rounded-lg p-6 mb-6">
+            <div className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
               <h2 className="text-xl font-semibold text-white mb-4">Camera QR Scanner</h2>
               
               <div className="space-y-4">
@@ -321,7 +336,7 @@ export default function QRScannerPage() {
             </div>
 
             {/* Quick Access - Demo Projecten */}
-            <div className="bg-gray-800 rounded-lg p-6">
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <h3 className="text-lg font-semibold text-white mb-4">Demo Projecten (Klik om te scannen)</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {mockProjects.map((project) => (
@@ -341,7 +356,7 @@ export default function QRScannerPage() {
             </div>
 
             {/* Workflow Info */}
-            <div className="bg-gray-800 rounded-lg p-6 mt-6">
+            <div className="bg-gray-800 rounded-lg p-6 mt-6 border border-gray-700">
               <h3 className="text-lg font-semibold text-white mb-4">Productie Workflow</h3>
               <div className="space-y-2">
                 {workstations.map((workstation, index) => (

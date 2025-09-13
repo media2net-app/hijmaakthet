@@ -115,11 +115,23 @@ export default function QRDetailPage() {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'schuifdeur':
-        return '🚪';
+        return (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          </svg>
+        );
       case 'taatsdeur':
-        return '🔄';
+        return (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        );
       default:
-        return '🏗️';
+        return (
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        );
     }
   };
 
@@ -141,13 +153,17 @@ export default function QRDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <div className="bg-gray-900 border-b border-gray-700 px-6 py-4">
+      <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="h-8 w-8 bg-white rounded-full flex items-center justify-center mr-3">
-              <span className="text-black font-bold text-sm">HMT</span>
+            <div className="h-8 w-8 bg-gray-700 rounded-full flex items-center justify-center mr-3 p-1 border border-gray-600">
+              <img 
+                src="/svg/hij-maakt-het.svg" 
+                alt="Hij Maakt Het Logo" 
+                className="h-full w-full object-contain"
+              />
             </div>
             <h1 className="text-2xl font-bold text-white">Project Details</h1>
           </div>
@@ -162,10 +178,12 @@ export default function QRDetailPage() {
 
       <div className="max-w-4xl mx-auto p-6">
         {/* Project Info Card */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-6">
+        <div className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
           <div className="flex items-start justify-between mb-6">
             <div className="flex items-center">
-              <div className="text-4xl mr-4">{getTypeIcon(project.type)}</div>
+              <div className="text-blue-400 mr-4">
+                {getTypeIcon(project.type)}
+              </div>
               <div>
                 <h2 className="text-2xl font-bold text-white">{project.name}</h2>
                 <div className="flex items-center space-x-4 mt-2">
@@ -230,7 +248,7 @@ export default function QRDetailPage() {
         </div>
 
         {/* Actions Card */}
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
           <h3 className="text-lg font-semibold text-white mb-4">Project Acties</h3>
           
           {updateMessage && (
@@ -303,7 +321,7 @@ export default function QRDetailPage() {
         </div>
 
         {/* QR Code Info */}
-        <div className="bg-gray-800 rounded-lg p-6 mt-6">
+        <div className="bg-gray-800 rounded-lg p-6 mt-6 border border-gray-700">
           <h3 className="text-lg font-semibold text-white mb-3">QR Code Informatie</h3>
           <div className="text-gray-400 text-sm">
             <p>Deze pagina is bereikbaar via QR code: <span className="text-white font-mono">{project.id}</span></p>
