@@ -20,6 +20,7 @@ export default function WerkstationsPage() {
   const totalProjects = useAnimatedCounter(17, 1500);
   const capacityUsage = useAnimatedCounter(2, 2000);
   const maintenanceCount = useAnimatedCounter(0, 1000);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar state
 
   const [workstations] = useState<Workstation[]>([
     {
@@ -185,8 +186,21 @@ export default function WerkstationsPage() {
 
   return (
     <div className="min-h-screen bg-black flex">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+      <div className={`
+        w-64 bg-black flex flex-col border-r border-gray-800
+        fixed lg:relative z-50 h-full
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        transition-transform duration-300
+      `}>
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
             <img 
@@ -284,13 +298,30 @@ export default function WerkstationsPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
-          <h1 className="text-2xl font-bold text-white">Werkstations</h1>
+        <header className="bg-black border-b border-gray-800 px-4 lg:px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              {/* Mobile Hamburger Menu */}
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              
+              <div>
+                <h1 className="text-xl lg:text-2xl font-bold text-white">Werkstations</h1>
+                <p className="text-sm lg:text-base text-gray-400 hidden sm:block">Beheer productie werkstations en workflow</p>
+              </div>
+            </div>
+          </div>
         </header>
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 lg:p-6">
           {/* Overview Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-6 lg:mb-8">
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover-lift animate-fade-in-up">
               <div className="flex items-center">
                 <div className="p-2 bg-green-600 rounded-lg">
@@ -357,7 +388,7 @@ export default function WerkstationsPage() {
           </div>
 
           {/* Workstations Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
             {workstations.map((workstation, index) => (
               <div key={workstation.id} className="bg-gray-800 rounded-lg p-6 hover-lift animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                 <div className="flex items-center justify-between mb-4">
@@ -418,9 +449,9 @@ export default function WerkstationsPage() {
           </div>
 
           {/* Production Flow */}
-          <div className="bg-gray-800 rounded-lg p-6 mt-8">
+          <div className="bg-black rounded-lg p-4 lg:p-6 mt-6 lg:mt-8 border border-gray-800">
             <h3 className="text-lg font-semibold text-white mb-4">Productie Flow</h3>
-            <div className="flex items-center justify-between overflow-x-auto">
+            <div className="flex items-center justify-between overflow-x-auto pb-4">
               {workstations.map((workstation, index) => (
                 <div key={workstation.id} className="flex items-center">
                   <div className="text-center">

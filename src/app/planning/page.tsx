@@ -22,6 +22,7 @@ interface Appointment {
 export default function PlanningPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState<'table' | 'calendar'>('table');
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar state
 
   // Animated counters
   const totalAppointments = useAnimatedCounter(47);
@@ -247,8 +248,21 @@ export default function PlanningPage() {
 
   return (
     <div className="min-h-screen bg-black flex">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+      <div className={`
+        w-64 bg-black flex flex-col border-r border-gray-800
+        fixed lg:relative z-50 h-full
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        transition-transform duration-300
+      `}>
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
             <img 
@@ -335,33 +349,48 @@ export default function PlanningPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-black border-b border-gray-800 px-6 py-4">
+        <header className="bg-black border-b border-gray-800 px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-white">Planning - September 2025</h1>
-              <p className="text-gray-400">Beheer je afspraken en planning</p>
-            </div>
             <div className="flex items-center space-x-4">
+              {/* Mobile Hamburger Menu */}
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              
+              <div>
+                <h1 className="text-xl lg:text-2xl font-bold text-white">Planning - September 2025</h1>
+                <p className="text-sm lg:text-base text-gray-400 hidden sm:block">Beheer je afspraken en planning</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2 lg:space-x-4">
               <div className="flex bg-gray-800 rounded-lg p-1">
                 <button
                   onClick={() => setView('table')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-2 lg:px-4 py-2 rounded-md text-xs lg:text-sm font-medium transition-colors ${
                     view === 'table' 
                       ? 'bg-gray-700 text-white' 
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
-                  Tabel
+                  <span className="hidden sm:inline">Tabel</span>
+                  <span className="sm:hidden">📋</span>
                 </button>
                 <button
                   onClick={() => setView('calendar')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-2 lg:px-4 py-2 rounded-md text-xs lg:text-sm font-medium transition-colors ${
                     view === 'calendar' 
                       ? 'bg-gray-700 text-white' 
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
-                  Kalender
+                  <span className="hidden sm:inline">Kalender</span>
+                  <span className="sm:hidden">📅</span>
                 </button>
               </div>
             </div>
@@ -369,9 +398,9 @@ export default function PlanningPage() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 space-y-6 overflow-y-auto">
+        <main className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-y-auto">
           {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
               <div className="flex items-center justify-between">
                 <div>
@@ -422,33 +451,34 @@ export default function PlanningPage() {
           {view === 'table' ? (
             /* Table View */
             <div className="bg-black rounded-lg border border-gray-800 hover-lift animate-fade-in-up">
-              <div className="px-6 py-4 border-b border-gray-800">
+              <div className="px-4 lg:px-6 py-4 border-b border-gray-800">
                 <h3 className="text-lg font-semibold text-white">Volgende 5 Afspraken</h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-800">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Datum & Tijd</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Klant</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Type</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Locatie</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Contact</th>
+                      <th className="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Datum & Tijd</th>
+                      <th className="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider hidden sm:table-cell">Klant</th>
+                      <th className="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Type</th>
+                      <th className="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider hidden md:table-cell">Locatie</th>
+                      <th className="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                      <th className="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider hidden lg:table-cell">Contact</th>
                     </tr>
                   </thead>
                   <tbody className="bg-black divide-y divide-gray-800">
                     {next5Appointments.map((appointment, index) => (
                       <tr key={appointment.id} className="hover:bg-gray-800/50 transition-colors animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 lg:px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-white">{formatDate(appointment.date)}</div>
                           <div className="text-sm text-gray-400">{appointment.time} ({appointment.duration}u)</div>
+                          <div className="text-sm font-medium text-white sm:hidden mt-1">{appointment.client}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                           <div className="text-sm font-medium text-white">{appointment.client}</div>
                           <div className="text-sm text-gray-400">{appointment.description}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 lg:px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <span className={`mr-2 ${getTypeColor(appointment.type)}`}>
                               {getTypeIcon(appointment.type)}
@@ -456,15 +486,15 @@ export default function PlanningPage() {
                             <span className="text-sm text-white capitalize">{appointment.type}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                        <td className="px-3 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-300 hidden md:table-cell">
                           {appointment.location}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 lg:px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border ${getStatusColor(appointment.status)}`}>
                             {appointment.status.replace('_', ' ')}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 lg:px-6 py-4 whitespace-nowrap hidden lg:table-cell">
                           <div className="text-sm text-white">{appointment.contact}</div>
                           <div className="text-sm text-gray-400">{appointment.phone}</div>
                         </td>
@@ -476,7 +506,7 @@ export default function PlanningPage() {
             </div>
           ) : (
             /* Calendar View */
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
               <div className="lg:col-span-2">
                 <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
                   <h3 className="text-lg font-semibold text-white mb-4">Kalender - September 2025</h3>

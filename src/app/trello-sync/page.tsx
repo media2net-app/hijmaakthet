@@ -18,6 +18,7 @@ export default function TrelloSyncPage() {
   const [token, setToken] = useState('');
   const [selectedBoard, setSelectedBoard] = useState('');
   const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar state
 
   const mockTrelloCards: TrelloCard[] = [
     {
@@ -94,8 +95,21 @@ export default function TrelloSyncPage() {
 
   return (
     <div className="min-h-screen bg-black flex">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+      <div className={`
+        w-64 bg-black flex flex-col border-r border-gray-800
+        fixed lg:relative z-50 h-full
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        transition-transform duration-300
+      `}>
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
             <img 
@@ -193,11 +207,28 @@ export default function TrelloSyncPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-black border-b border-gray-800 px-6 py-4">
-          <h1 className="text-2xl font-bold text-white">Trello Synchronisatie</h1>
+        <header className="bg-black border-b border-gray-800 px-4 lg:px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              {/* Mobile Hamburger Menu */}
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              
+              <div>
+                <h1 className="text-xl lg:text-2xl font-bold text-white">Trello Synchronisatie</h1>
+                <p className="text-sm lg:text-base text-gray-400 hidden sm:block">Synchroniseer je Trello boards met het project management systeem</p>
+              </div>
+            </div>
+          </div>
         </header>
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 lg:p-6">
           <div className="max-w-4xl mx-auto">
             {/* Connection Status */}
             <div className="bg-black rounded-lg p-6 mb-6 border border-gray-800">
@@ -220,7 +251,7 @@ export default function TrelloSyncPage() {
                       type="text"
                       value={apiKey}
                       onChange={(e) => setApiKey(e.target.value)}
-                      className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                       placeholder="Je Trello API key"
                     />
                   </div>
@@ -233,14 +264,14 @@ export default function TrelloSyncPage() {
                       type="text"
                       value={token}
                       onChange={(e) => setToken(e.target.value)}
-                      className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                       placeholder="Je Trello token"
                     />
                   </div>
 
                   <button
                     onClick={handleConnect}
-                    className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                    className="w-full sm:w-auto px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-base"
                   >
                     Verbind met Trello
                   </button>
@@ -254,7 +285,7 @@ export default function TrelloSyncPage() {
                     <select
                       value={selectedBoard}
                       onChange={(e) => setSelectedBoard(e.target.value)}
-                      className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                     >
                       <option value="">Selecteer een board</option>
                       {mockBoards.map((board) => (
@@ -265,18 +296,18 @@ export default function TrelloSyncPage() {
                     </select>
                   </div>
 
-                  <div className="flex space-x-3">
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                     <button
                       onClick={handleSync}
                       disabled={!selectedBoard || syncStatus === 'syncing'}
-                      className="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto px-6 py-3 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base"
                     >
                       {syncStatus === 'syncing' ? 'Synchroniseren...' : 'Synchroniseer Nu'}
                     </button>
                     
                     <button
                       onClick={() => setIsConnected(false)}
-                      className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                      className="w-full sm:w-auto px-6 py-3 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors text-base"
                     >
                       Verbreek Verbinding
                     </button>
@@ -293,7 +324,7 @@ export default function TrelloSyncPage() {
 
             {/* Trello Cards */}
             {isConnected && selectedBoard && (
-              <div className="bg-black rounded-lg p-6 border border-gray-800">
+              <div className="bg-black rounded-lg p-4 lg:p-6 border border-gray-800">
                 <h3 className="text-lg font-semibold text-white mb-4">Trello Kaarten</h3>
                 
                 <div className="space-y-4">

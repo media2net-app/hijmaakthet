@@ -16,6 +16,8 @@ export default function QRScannerPage() {
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment'); // 'environment' = back camera, 'user' = front camera
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar state
   const videoRef = useRef<HTMLVideoElement>(null);
   const readerRef = useRef<BrowserMultiFormatReader | null>(null);
 
@@ -77,8 +79,28 @@ export default function QRScannerPage() {
         throw new Error('Geen camera gevonden');
       }
 
-      // Gebruik de eerste beschikbare camera
-      const selectedDeviceId = videoInputDevices[0].deviceId;
+      // Find camera based on facing mode
+      let selectedDeviceId = videoInputDevices[0].deviceId;
+      
+      if (videoInputDevices.length > 1) {
+        // Try to find the appropriate camera based on facing mode
+        const backCamera = videoInputDevices.find(device => 
+          device.label.toLowerCase().includes('back') || 
+          device.label.toLowerCase().includes('rear') ||
+          device.label.toLowerCase().includes('environment')
+        );
+        const frontCamera = videoInputDevices.find(device => 
+          device.label.toLowerCase().includes('front') || 
+          device.label.toLowerCase().includes('user') ||
+          device.label.toLowerCase().includes('facing')
+        );
+        
+        if (facingMode === 'environment' && backCamera) {
+          selectedDeviceId = backCamera.deviceId;
+        } else if (facingMode === 'user' && frontCamera) {
+          selectedDeviceId = frontCamera.deviceId;
+        }
+      }
       
       await readerRef.current.decodeFromVideoDevice(
         selectedDeviceId,
@@ -114,6 +136,19 @@ export default function QRScannerPage() {
     setCameraActive(false);
   };
 
+  const switchCamera = () => {
+    if (cameraActive) {
+      stopCamera();
+      setFacingMode(prev => prev === 'environment' ? 'user' : 'environment');
+      // Restart camera with new facing mode after a short delay
+      setTimeout(() => {
+        startCamera();
+      }, 100);
+    } else {
+      setFacingMode(prev => prev === 'environment' ? 'user' : 'environment');
+    }
+  };
+
   useEffect(() => {
     return () => {
       stopCamera();
@@ -122,8 +157,21 @@ export default function QRScannerPage() {
 
   return (
     <div className="min-h-screen bg-black flex">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       {/* Sidebar */}
-      <div className="w-64 bg-black flex flex-col border-r border-gray-800">
+      <div className={`
+        w-64 bg-black flex flex-col border-r border-gray-800
+        fixed lg:relative z-50 h-full
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        transition-transform duration-300
+      `}>
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center">
             <img 
@@ -221,11 +269,28 @@ export default function QRScannerPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-black border-b border-gray-800 px-6 py-4">
-          <h1 className="text-2xl font-bold text-white">QR Code Scanner</h1>
+        <header className="bg-black border-b border-gray-800 px-4 lg:px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              {/* Mobile Hamburger Menu */}
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              
+              <div>
+                <h1 className="text-xl lg:text-2xl font-bold text-white">QR Code Scanner</h1>
+                <p className="text-sm lg:text-base text-gray-400 hidden sm:block">Scan QR codes om projecten te volgen</p>
+              </div>
+            </div>
+          </div>
         </header>
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 lg:p-6">
           <div className="max-w-4xl mx-auto">
             {/* Camera Scanner */}
             <div className="bg-black rounded-lg p-6 mb-6 border border-gray-800">
@@ -233,14 +298,42 @@ export default function QRScannerPage() {
               
               <div className="space-y-4">
                 {!cameraActive ? (
-                  <div className="text-center">
+                  <div className="text-center space-y-4">
                     <button
                       onClick={startCamera}
-                      className="px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium"
+                      className="w-full sm:w-auto px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium"
                     >
                       Start Camera Scanner
                     </button>
-                    <p className="text-gray-400 text-sm mt-2">
+                    
+                    {/* Camera Selection */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+                      <span className="text-sm text-gray-400">Camera:</span>
+                      <div className="flex bg-gray-800 rounded-lg p-1">
+                        <button
+                          onClick={() => setFacingMode('environment')}
+                          className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                            facingMode === 'environment' 
+                              ? 'bg-gray-700 text-white' 
+                              : 'text-gray-400 hover:text-white'
+                          }`}
+                        >
+                          📷 Achterkant
+                        </button>
+                        <button
+                          onClick={() => setFacingMode('user')}
+                          className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                            facingMode === 'user' 
+                              ? 'bg-gray-700 text-white' 
+                              : 'text-gray-400 hover:text-white'
+                          }`}
+                        >
+                          🤳 Voorkant
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-400 text-sm">
                       Klik om camera te starten en QR code te scannen
                     </p>
                   </div>
@@ -249,18 +342,30 @@ export default function QRScannerPage() {
                     <div className="relative">
                       <video
                         ref={videoRef}
-                        className="w-full max-w-md mx-auto rounded-lg"
-                        style={{ maxHeight: '300px' }}
+                        className="w-full h-48 sm:h-64 bg-gray-800 rounded-lg object-cover"
+                        autoPlay
+                        playsInline
                       />
-                      <div className="absolute top-2 right-2">
-                        <button
-                          onClick={stopCamera}
-                          className="px-3 py-1 text-white bg-red-600 hover:bg-red-700 rounded text-sm"
-                        >
-                          Stop
-                        </button>
+                      <div className="absolute inset-0 border-2 border-blue-500 rounded-lg pointer-events-none">
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 border-2 border-white rounded-lg opacity-50"></div>
                       </div>
                     </div>
+                    
+                    <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+                      <button
+                        onClick={stopCamera}
+                        className="px-6 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+                      >
+                        Stop Camera
+                      </button>
+                      <button
+                        onClick={switchCamera}
+                        className="px-6 py-2 text-white bg-gray-600 hover:bg-gray-700 rounded-lg transition-colors"
+                      >
+                        {facingMode === 'environment' ? '🤳 Voorkant' : '📷 Achterkant'}
+                      </button>
+                    </div>
+                    
                     <p className="text-center text-gray-400 text-sm">
                       Richt de camera op een QR code om te scannen
                     </p>
@@ -281,7 +386,7 @@ export default function QRScannerPage() {
                     type="text"
                     value={scannedCode}
                     onChange={(e) => setScannedCode(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                     placeholder="HMT-2024-001"
                   />
                 </div>
@@ -293,7 +398,7 @@ export default function QRScannerPage() {
                   <select
                     value={selectedWorkstation}
                     onChange={(e) => setSelectedWorkstation(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
                   >
                     <option value="">Selecteer werkstation</option>
                     {workstations.map((workstation) => (
@@ -304,10 +409,10 @@ export default function QRScannerPage() {
                   </select>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <button
                     onClick={handleScan}
-                    className="px-4 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium"
+                    className="px-4 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors font-medium text-base"
                   >
                     Project Verplaatsen
                   </button>
@@ -318,7 +423,7 @@ export default function QRScannerPage() {
                       }
                     }}
                     disabled={!scannedCode}
-                    className="px-4 py-3 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-3 text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed text-base"
                   >
                     Bekijk Project Details
                   </button>
