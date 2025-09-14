@@ -451,22 +451,24 @@ export default function WerkstationsPage() {
           {/* Production Flow */}
           <div className="bg-black rounded-lg p-4 lg:p-6 mt-6 lg:mt-8 border border-gray-800">
             <h3 className="text-lg font-semibold text-white mb-4">Productie Flow</h3>
-            <div className="flex items-center justify-between overflow-x-auto pb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 lg:gap-2">
               {workstations.map((workstation, index) => (
-                <div key={workstation.id} className="flex items-center">
+                <div key={workstation.id} className="flex flex-col items-center relative">
                   <div className="text-center">
-                    <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-2">
-                      <div className="text-blue-400">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-800 rounded-full flex items-center justify-center mb-2">
+                      <div className="text-blue-400 text-sm sm:text-base">
                         {getWorkstationIcon(workstation.icon)}
                       </div>
                     </div>
-                    <div className="text-white text-sm font-medium">{workstation.name}</div>
-                    <div className="text-gray-400 text-xs">{workstation.currentProjects} projecten</div>
+                    <div className="text-white text-xs sm:text-sm font-medium text-center">{workstation.name}</div>
+                    <div className="text-gray-400 text-xs text-center">{workstation.currentProjects} projecten</div>
                   </div>
                   {index < workstations.length - 1 && (
-                    <svg className="w-6 h-6 text-gray-500 mx-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                    <div className="hidden lg:block absolute top-1/2 left-full transform -translate-y-1/2 translate-x-2">
+                      <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
                   )}
                 </div>
               ))}

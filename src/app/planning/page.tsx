@@ -454,8 +454,8 @@ export default function PlanningPage() {
               <div className="px-4 lg:px-6 py-4 border-b border-gray-800">
                 <h3 className="text-lg font-semibold text-white">Volgende 5 Afspraken</h3>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full">
+              <div className="overflow-x-auto scrollbar-hide">
+                <table className="w-full min-w-full">
                   <thead className="bg-gray-800">
                     <tr>
                       <th className="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Datum & Tijd</th>
