@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAnimatedCounter } from '@/hooks/useAnimatedCounter';
+import { useModal } from '@/contexts/ModalContext';
 import { 
   AreaChart, 
   Area, 
@@ -21,6 +22,7 @@ import {
 export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false); // Start closed on mobile
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { openModal } = useModal();
 
   // Animated counters
   const totalUsers = useAnimatedCounter(127);
@@ -68,6 +70,181 @@ export default function DashboardPage() {
     { id: 4, type: 'delivery', message: 'Levering HMT-2024-068 verzonden', time: '1 uur geleden', status: 'info' },
     { id: 5, type: 'alert', message: 'Onderhoud Lasafdeling gepland voor morgen', time: '2 uur geleden', status: 'warning' }
   ];
+
+  // Mock data for modals
+  const usersData = [
+    { id: 1, name: 'Jan de Vries', role: 'Project Manager', lastActive: '2 min geleden', status: 'online' },
+    { id: 2, name: 'Maria van der Berg', role: 'Productie Leider', lastActive: '15 min geleden', status: 'online' },
+    { id: 3, name: 'Peter Jansen', role: 'Kwaliteitscontrole', lastActive: '1 uur geleden', status: 'away' },
+    { id: 4, name: 'Lisa de Wit', role: 'Administratie', lastActive: '2 uur geleden', status: 'offline' },
+    { id: 5, name: 'Tom Bakker', role: 'Lasser', lastActive: '3 uur geleden', status: 'offline' }
+  ];
+
+  const projectsData = [
+    { id: 'HMT-2024-001', name: 'Schuifdeur Woning Amsterdam', client: 'Jan de Vries', status: 'in-productie', progress: 75 },
+    { id: 'HMT-2024-002', name: 'Taatsdeur Kantoor Rotterdam', client: 'ABC Bedrijven BV', status: 'nieuw', progress: 10 },
+    { id: 'HMT-2024-003', name: 'Stalen Hekwerk Villa', client: 'Maria van der Berg', status: 'klaar', progress: 100 },
+    { id: 'HMT-2024-004', name: 'Schuifdeur Woning Utrecht', client: 'Peter Jansen', status: 'in-productie', progress: 45 },
+    { id: 'HMT-2024-005', name: 'Taatsdeur Woning Den Haag', client: 'Lisa de Wit', status: 'wachtend', progress: 0 }
+  ];
+
+  const revenueDataDetailed = [
+    { month: 'Januari', revenue: 180000, orders: 45, clients: 12 },
+    { month: 'Februari', revenue: 220000, orders: 52, clients: 15 },
+    { month: 'Maart', revenue: 195000, orders: 48, clients: 13 },
+    { month: 'April', revenue: 245000, orders: 61, clients: 18 },
+    { month: 'Mei', revenue: 280000, orders: 68, clients: 20 },
+    { month: 'Juni', revenue: 265000, orders: 64, clients: 19 }
+  ];
+
+  const efficiencyData = [
+    { workstation: 'Lasafdeling', efficiency: 95, capacity: 88, orders: 24, avgTime: '2.5u' },
+    { workstation: 'Montage', efficiency: 92, capacity: 76, orders: 18, avgTime: '3.2u' },
+    { workstation: 'Afwerking', efficiency: 89, capacity: 82, orders: 21, avgTime: '1.8u' },
+    { workstation: 'Kwaliteit', efficiency: 98, capacity: 90, orders: 15, avgTime: '0.5u' },
+    { workstation: 'Verpakking', efficiency: 94, capacity: 85, orders: 19, avgTime: '0.3u' }
+  ];
+
+  // Modal handlers
+  const openUsersModal = () => {
+    openModal({
+      title: 'Gebruikers Overzicht',
+      size: 'lg',
+      content: (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4">
+            {usersData.map((user) => (
+              <div key={user.id} className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-3 h-3 rounded-full ${
+                    user.status === 'online' ? 'bg-green-500' :
+                    user.status === 'away' ? 'bg-yellow-500' : 'bg-gray-500'
+                  }`}></div>
+                  <div>
+                    <div className="text-white font-medium">{user.name}</div>
+                    <div className="text-gray-400 text-sm">{user.role}</div>
+                  </div>
+                </div>
+                <div className="text-gray-400 text-sm">{user.lastActive}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    });
+  };
+
+  const openProjectsModal = () => {
+    openModal({
+      title: 'Projecten Overzicht',
+      size: 'xl',
+      content: (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4">
+            {projectsData.map((project) => (
+              <div key={project.id} className="p-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-white font-medium">{project.id}</div>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    project.status === 'klaar' ? 'bg-green-600' :
+                    project.status === 'in-productie' ? 'bg-blue-600' :
+                    project.status === 'nieuw' ? 'bg-yellow-600' : 'bg-gray-600'
+                  }`}>
+                    {project.status}
+                  </span>
+                </div>
+                <div className="text-gray-300 mb-2">{project.name}</div>
+                <div className="text-gray-400 text-sm mb-3">Klant: {project.client}</div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${project.progress}%` }}
+                  ></div>
+                </div>
+                <div className="text-gray-400 text-xs mt-1">{project.progress}% voltooid</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    });
+  };
+
+  const openRevenueModal = () => {
+    openModal({
+      title: 'Omzet Details',
+      size: 'xl',
+      content: (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Maandelijkse Omzet</h4>
+              <div className="space-y-3">
+                {revenueDataDetailed.map((month) => (
+                  <div key={month.month} className="flex justify-between items-center">
+                    <span className="text-gray-300">{month.month}</span>
+                    <span className="text-white font-medium">€{month.revenue.toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Top Klanten</h4>
+              <div className="space-y-3">
+                {topClients.map((client) => (
+                  <div key={client.name} className="flex justify-between items-center">
+                    <span className="text-gray-300">{client.name}</span>
+                    <span className="text-white font-medium">€{client.revenue.toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    });
+  };
+
+  const openEfficiencyModal = () => {
+    openModal({
+      title: 'Efficiency Details',
+      size: 'lg',
+      content: (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4">
+            {efficiencyData.map((ws) => (
+              <div key={ws.workstation} className="p-4 bg-gray-800 rounded-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-white font-medium">{ws.workstation}</div>
+                  <div className="text-green-400 font-medium">{ws.efficiency}%</div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <div className="text-gray-400">Capaciteit</div>
+                    <div className="text-white">{ws.capacity}%</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400">Orders</div>
+                    <div className="text-white">{ws.orders}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400">Gem. Tijd</div>
+                    <div className="text-white">{ws.avgTime}</div>
+                  </div>
+                </div>
+                <div className="mt-3 w-full bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${ws.efficiency}%` }}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    });
+  };
 
   const topClients = [
     { name: 'Bouwbedrijf Amsterdam', orders: 12, revenue: 45000, status: 'active' },
@@ -228,7 +405,10 @@ export default function DashboardPage() {
         <main className="flex-1 p-4 lg:p-6 space-y-4 lg:space-y-6 overflow-y-auto">
           {/* KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+            <button 
+              onClick={openUsersModal}
+              className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up w-full text-left transition-all duration-200 hover:border-blue-500/50 hover:bg-gray-900/50"
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Totaal Gebruikers</p>
@@ -241,9 +421,12 @@ export default function DashboardPage() {
                   </svg>
                 </div>
               </div>
-            </div>
+            </button>
 
-            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+            <button 
+              onClick={openProjectsModal}
+              className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up w-full text-left transition-all duration-200 hover:border-green-500/50 hover:bg-gray-900/50"
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Actieve Projecten</p>
@@ -256,9 +439,12 @@ export default function DashboardPage() {
                   </svg>
                 </div>
               </div>
-            </div>
+            </button>
 
-            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+            <button 
+              onClick={openRevenueModal}
+              className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up w-full text-left transition-all duration-200 hover:border-yellow-500/50 hover:bg-gray-900/50"
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Maandelijkse Omzet</p>
@@ -271,9 +457,12 @@ export default function DashboardPage() {
                   </svg>
                 </div>
               </div>
-            </div>
+            </button>
 
-            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+            <button 
+              onClick={openEfficiencyModal}
+              className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up w-full text-left transition-all duration-200 hover:border-purple-500/50 hover:bg-gray-900/50"
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-400">Efficiëntie Score</p>
@@ -286,7 +475,7 @@ export default function DashboardPage() {
                   </svg>
                 </div>
               </div>
-            </div>
+            </button>
           </div>
 
           {/* Charts Row */}
