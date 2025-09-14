@@ -270,17 +270,6 @@ export default function DashboardPage() {
         fixed lg:relative z-50 h-full
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        {/* Logo */}
-        <div className="p-4 border-b border-gray-800">
-          <div className="flex items-center">
-            <img 
-              src="/SVG/hij-maakt-het.svg" 
-              alt="Hij Maakt Het" 
-              className="h-10 w-auto object-contain"
-            />
-          </div>
-        </div>
-
         {/* Menu */}
         <nav className="flex-1 p-4">
           <ul className="space-y-2">
@@ -353,6 +342,17 @@ export default function DashboardPage() {
             </li>
           </ul>
         </nav>
+
+        {/* Logo */}
+        <div className="p-4 border-t border-gray-800">
+          <div className="flex items-center justify-center">
+            <img 
+              src="/SVG/hij-maakt-het.svg" 
+              alt="Hij Maakt Het" 
+              className={`${sidebarOpen ? 'h-16 w-full' : 'h-8 w-8'} object-contain transition-all duration-300`}
+            />
+          </div>
+        </div>
 
         {/* Sidebar Toggle */}
         <div className="p-4 border-t border-gray-800">

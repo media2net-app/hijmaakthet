@@ -201,16 +201,6 @@ export default function WerkstationsPage() {
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         transition-transform duration-300
       `}>
-        <div className="p-4 border-b border-gray-800">
-          <div className="flex items-center">
-            <img 
-              src="/SVG/hij-maakt-het.svg" 
-              alt="Hij Maakt Het" 
-              className="h-10 w-auto object-contain"
-            />
-          </div>
-        </div>
-
         <nav className="flex-1 p-4">
           <ul className="space-y-2">
             <li>
@@ -282,6 +272,17 @@ export default function WerkstationsPage() {
             </li>
           </ul>
         </nav>
+
+        {/* Logo */}
+        <div className="p-4 border-t border-gray-800">
+          <div className="flex items-center justify-center">
+            <img 
+              src="/SVG/hij-maakt-het.svg" 
+              alt="Hij Maakt Het" 
+              className="h-16 w-full object-contain"
+            />
+          </div>
+        </div>
 
         <div className="p-4 border-t border-gray-700">
           <button
