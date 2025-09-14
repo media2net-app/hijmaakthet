@@ -246,6 +246,255 @@ export default function DashboardPage() {
     });
   };
 
+  // Chart Modal Handlers
+  const openRevenueChartModal = () => {
+    openModal({
+      title: 'Omzet Trend Details',
+      size: 'xl',
+      content: (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Maandelijkse Omzet</h4>
+              <div className="space-y-3">
+                {revenueDataDetailed.map((month) => (
+                  <div key={month.month} className="flex justify-between items-center">
+                    <span className="text-gray-300">{month.month}</span>
+                    <div className="text-right">
+                      <div className="text-white font-medium">€{month.revenue.toLocaleString()}</div>
+                      <div className="text-gray-400 text-sm">{month.orders} orders</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Omzet Statistieken</h4>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Totaal Omzet</span>
+                  <span className="text-white font-medium">€{revenueDataDetailed.reduce((sum, month) => sum + month.revenue, 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Gemiddelde per Maand</span>
+                  <span className="text-white font-medium">€{Math.round(revenueDataDetailed.reduce((sum, month) => sum + month.revenue, 0) / revenueDataDetailed.length).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Beste Maand</span>
+                  <span className="text-white font-medium">{revenueDataDetailed.reduce((max, month) => month.revenue > max.revenue ? month : max).month}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Totaal Orders</span>
+                  <span className="text-white font-medium">{revenueDataDetailed.reduce((sum, month) => sum + month.orders, 0)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-4">
+            <h4 className="text-white font-medium mb-4">Uitgebreide Omzet Grafiek</h4>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={revenueDataDetailed}>
+                <defs>
+                  <linearGradient id="colorRevenueDetailed" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.1}/>
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="month" stroke="#6B7280" />
+                <YAxis stroke="#6B7280" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                    color: '#F9FAFB'
+                  }} 
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="#3B82F6" 
+                  fillOpacity={1} 
+                  fill="url(#colorRevenueDetailed)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )
+    });
+  };
+
+  const openProjectStatusModal = () => {
+    openModal({
+      title: 'Project Status Details',
+      size: 'lg',
+      content: (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Status Breakdown</h4>
+              <div className="space-y-3">
+                {projectStatusData.map((status) => (
+                  <div key={status.name} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div 
+                        className="w-4 h-4 rounded-full" 
+                        style={{ backgroundColor: status.color }}
+                      ></div>
+                      <span className="text-gray-300">{status.name}</span>
+                    </div>
+                    <div className="text-white font-medium">{status.value} projecten</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Project Status Grafiek</h4>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={projectStatusData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {projectStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px',
+                      color: '#F9FAFB'
+                    }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-4">
+            <h4 className="text-white font-medium mb-4">Project Details per Status</h4>
+            <div className="space-y-3">
+              {projectStatusData.map((status) => (
+                <div key={status.name} className="p-3 bg-gray-700 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-3">
+                      <div 
+                        className="w-3 h-3 rounded-full" 
+                        style={{ backgroundColor: status.color }}
+                      ></div>
+                      <span className="text-white font-medium">{status.name}</span>
+                    </div>
+                    <span className="text-gray-400">{status.value} projecten</span>
+                  </div>
+                  <div className="text-gray-300 text-sm">
+                    {status.name === 'Voltooid' && 'Projecten die succesvol zijn afgerond en geleverd'}
+                    {status.name === 'In Productie' && 'Projecten die momenteel in productie zijn'}
+                    {status.name === 'Wachtend' && 'Projecten die wachten op start van productie'}
+                    {status.name === 'Geleverd' && 'Projecten die zijn geleverd aan klanten'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )
+    });
+  };
+
+  const openWorkstationModal = () => {
+    openModal({
+      title: 'Werkstation Prestaties Details',
+      size: 'xl',
+      content: (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Prestatie Overzicht</h4>
+              <div className="space-y-3">
+                {workstationData.map((ws) => (
+                  <div key={ws.name} className="p-3 bg-gray-700 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-white font-medium">{ws.name}</span>
+                      <span className="text-green-400 font-medium">{ws.efficiency}%</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <div className="text-gray-400">Capaciteit</div>
+                        <div className="text-white">{ws.capacity}%</div>
+                      </div>
+                      <div>
+                        <div className="text-gray-400">Orders</div>
+                        <div className="text-white">{ws.orders}</div>
+                      </div>
+                    </div>
+                    <div className="mt-2 w-full bg-gray-600 rounded-full h-2">
+                      <div 
+                        className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${ws.efficiency}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Uitgebreide Prestatie Grafiek</h4>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={workstationData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="name" stroke="#6B7280" />
+                  <YAxis stroke="#6B7280" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937', 
+                      border: '1px solid #374151',
+                      borderRadius: '8px',
+                      color: '#F9FAFB'
+                    }} 
+                  />
+                  <Bar dataKey="efficiency" fill="#10B981" name="Efficiëntie %" />
+                  <Bar dataKey="capacity" fill="#3B82F6" name="Capaciteit %" />
+                  <Bar dataKey="orders" fill="#F59E0B" name="Orders" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-4">
+            <h4 className="text-white font-medium mb-4">Werkstation Statistieken</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-gray-700 rounded-lg">
+                <div className="text-2xl font-bold text-green-400">
+                  {Math.round(workstationData.reduce((sum, ws) => sum + ws.efficiency, 0) / workstationData.length)}%
+                </div>
+                <div className="text-gray-400">Gem. Efficiëntie</div>
+              </div>
+              <div className="text-center p-4 bg-gray-700 rounded-lg">
+                <div className="text-2xl font-bold text-blue-400">
+                  {Math.round(workstationData.reduce((sum, ws) => sum + ws.capacity, 0) / workstationData.length)}%
+                </div>
+                <div className="text-gray-400">Gem. Capaciteit</div>
+              </div>
+              <div className="text-center p-4 bg-gray-700 rounded-lg">
+                <div className="text-2xl font-bold text-yellow-400">
+                  {workstationData.reduce((sum, ws) => sum + ws.orders, 0)}
+                </div>
+                <div className="text-gray-400">Totaal Orders</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    });
+  };
+
   const topClients = [
     { name: 'Bouwbedrijf Amsterdam', orders: 12, revenue: 45000, status: 'active' },
     { name: 'Architectenbureau Rotterdam', orders: 8, revenue: 32000, status: 'active' },
@@ -481,7 +730,10 @@ export default function DashboardPage() {
           {/* Charts Row */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
             {/* Revenue Chart */}
-            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+            <button 
+              onClick={openRevenueChartModal}
+              className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up w-full text-left transition-all duration-200 hover:border-blue-500/50 hover:bg-gray-900/50"
+            >
               <h3 className="text-lg font-semibold text-white mb-4">Omzet Trend</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={revenueData}>
@@ -511,10 +763,13 @@ export default function DashboardPage() {
                   />
                 </AreaChart>
               </ResponsiveContainer>
-            </div>
+            </button>
 
             {/* Project Status Pie Chart */}
-            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+            <button 
+              onClick={openProjectStatusModal}
+              className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up w-full text-left transition-all duration-200 hover:border-green-500/50 hover:bg-gray-900/50"
+            >
               <h3 className="text-lg font-semibold text-white mb-4">Project Status</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -542,11 +797,14 @@ export default function DashboardPage() {
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>
-            </div>
+            </button>
           </div>
 
           {/* Workstation Performance */}
-          <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+          <button 
+            onClick={openWorkstationModal}
+            className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up w-full text-left transition-all duration-200 hover:border-purple-500/50 hover:bg-gray-900/50"
+          >
             <h3 className="text-lg font-semibold text-white mb-4">Werkstation Prestaties</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={workstationData}>
@@ -565,7 +823,7 @@ export default function DashboardPage() {
                 <Bar dataKey="capacity" fill="#3B82F6" name="Capaciteit %" />
               </BarChart>
             </ResponsiveContainer>
-          </div>
+          </button>
 
           {/* Bottom Row */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
