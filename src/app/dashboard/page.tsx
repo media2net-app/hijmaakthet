@@ -71,6 +71,142 @@ export default function DashboardPage() {
     { id: 5, type: 'alert', message: 'Onderhoud Lasafdeling gepland voor morgen', time: '2 uur geleden', status: 'warning' }
   ];
 
+  // Extended activity data for modal
+  const extendedActivityData = [
+    { 
+      id: 1, 
+      type: 'order', 
+      message: 'Nieuwe order HMT-2024-089 ontvangen', 
+      time: '2 min geleden', 
+      status: 'success',
+      details: {
+        projectId: 'HMT-2024-089',
+        client: 'Bouwbedrijf Amsterdam',
+        type: 'Schuifdeur',
+        value: '€12,500',
+        priority: 'Hoog',
+        estimatedDelivery: '15 dagen',
+        assignedTo: 'Jan de Vries'
+      }
+    },
+    { 
+      id: 2, 
+      type: 'production', 
+      message: 'Project HMT-2024-075 voltooid in Lasafdeling', 
+      time: '15 min geleden', 
+      status: 'info',
+      details: {
+        projectId: 'HMT-2024-075',
+        client: 'Architectenbureau Rotterdam',
+        type: 'Taatsdeur',
+        workstation: 'Lasafdeling',
+        duration: '3.5 uur',
+        quality: 'Uitstekend',
+        nextStep: 'Montage',
+        assignedTo: 'Maria van der Berg'
+      }
+    },
+    { 
+      id: 3, 
+      type: 'quality', 
+      message: 'Kwaliteitscontrole HMT-2024-071 goedgekeurd', 
+      time: '32 min geleden', 
+      status: 'success',
+      details: {
+        projectId: 'HMT-2024-071',
+        client: 'Projectontwikkelaar Utrecht',
+        type: 'Stalen Hekwerk',
+        inspector: 'Peter Jansen',
+        score: '98/100',
+        issues: 'Geen',
+        approved: true,
+        nextStep: 'Verpakking'
+      }
+    },
+    { 
+      id: 4, 
+      type: 'delivery', 
+      message: 'Levering HMT-2024-068 verzonden', 
+      time: '1 uur geleden', 
+      status: 'info',
+      details: {
+        projectId: 'HMT-2024-068',
+        client: 'Particulier Den Haag',
+        type: 'Schuifdeur',
+        deliveryAddress: 'Prinsengracht 123, Den Haag',
+        trackingNumber: 'TRK-2024-068',
+        estimatedArrival: 'Vandaag 16:00',
+        driver: 'Tom Bakker',
+        vehicle: 'VW Transporter'
+      }
+    },
+    { 
+      id: 5, 
+      type: 'alert', 
+      message: 'Onderhoud Lasafdeling gepland voor morgen', 
+      time: '2 uur geleden', 
+      status: 'warning',
+      details: {
+        workstation: 'Lasafdeling',
+        maintenanceType: 'Preventief onderhoud',
+        scheduledTime: 'Morgen 08:00-12:00',
+        technician: 'Externe specialist',
+        reason: 'Maandelijks onderhoud',
+        impact: 'Geen productie 4 uur',
+        notification: 'Alle medewerkers geïnformeerd'
+      }
+    },
+    { 
+      id: 6, 
+      type: 'user', 
+      message: 'Nieuwe gebruiker geregistreerd: Lisa de Wit', 
+      time: '3 uur geleden', 
+      status: 'info',
+      details: {
+        username: 'Lisa de Wit',
+        role: 'Administratie',
+        department: 'Backoffice',
+        accessLevel: 'Basis',
+        permissions: ['Projecten bekijken', 'Rapportages genereren'],
+        manager: 'Jan de Vries',
+        startDate: 'Vandaag'
+      }
+    },
+    { 
+      id: 7, 
+      type: 'system', 
+      message: 'Backup voltooid - 2.3GB data veiliggesteld', 
+      time: '4 uur geleden', 
+      status: 'success',
+      details: {
+        backupType: 'Dagelijkse backup',
+        size: '2.3GB',
+        location: 'Cloud storage',
+        duration: '12 minuten',
+        status: 'Succesvol',
+        nextBackup: 'Morgen 02:00',
+        retention: '30 dagen'
+      }
+    },
+    { 
+      id: 8, 
+      type: 'production', 
+      message: 'Project HMT-2024-072 gestart in Montage', 
+      time: '5 uur geleden', 
+      status: 'info',
+      details: {
+        projectId: 'HMT-2024-072',
+        client: 'Bouwbedrijf Amsterdam',
+        type: 'Taatsdeur',
+        workstation: 'Montage',
+        estimatedDuration: '4 uur',
+        assignedTo: 'Maria van der Berg',
+        materials: 'Alle materialen beschikbaar',
+        priority: 'Normaal'
+      }
+    }
+  ];
+
   // Mock data for modals
   const usersData = [
     { id: 1, name: 'Jan de Vries', role: 'Project Manager', lastActive: '2 min geleden', status: 'online' },
@@ -495,6 +631,108 @@ export default function DashboardPage() {
     });
   };
 
+  // Activity Modal Handler
+  const openActivityModal = () => {
+    openModal({
+      title: 'Uitgebreide Activiteit Log',
+      size: 'xl',
+      content: (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Activiteit Overzicht</h4>
+              <div className="space-y-3">
+                {extendedActivityData.slice(0, 4).map((activity) => (
+                  <div key={activity.id} className="p-3 bg-gray-700 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <div className={`w-3 h-3 rounded-full mt-1 ${
+                        activity.status === 'success' ? 'bg-green-500' :
+                        activity.status === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+                      }`}></div>
+                      <div className="flex-1">
+                        <div className="text-white text-sm font-medium">{activity.message}</div>
+                        <div className="text-gray-400 text-xs">{activity.time}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h4 className="text-white font-medium mb-4">Activiteit Statistieken</h4>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Totaal Activiteiten</span>
+                  <span className="text-white font-medium">{extendedActivityData.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Vandaag</span>
+                  <span className="text-white font-medium">{extendedActivityData.filter(a => a.time.includes('min') || a.time.includes('uur')).length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Productie Updates</span>
+                  <span className="text-white font-medium">{extendedActivityData.filter(a => a.type === 'production').length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Kwaliteitscontroles</span>
+                  <span className="text-white font-medium">{extendedActivityData.filter(a => a.type === 'quality').length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Leveringen</span>
+                  <span className="text-white font-medium">{extendedActivityData.filter(a => a.type === 'delivery').length}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gray-800 rounded-lg p-4">
+            <h4 className="text-white font-medium mb-4">Gedetailleerde Activiteit Log</h4>
+            <div className="space-y-4">
+              {extendedActivityData.map((activity) => (
+                <div key={activity.id} className="p-4 bg-gray-700 rounded-lg">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start space-x-3">
+                      <div className={`w-3 h-3 rounded-full mt-1 ${
+                        activity.status === 'success' ? 'bg-green-500' :
+                        activity.status === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+                      }`}></div>
+                      <div>
+                        <div className="text-white font-medium">{activity.message}</div>
+                        <div className="text-gray-400 text-sm">{activity.time}</div>
+                      </div>
+                    </div>
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      activity.type === 'order' ? 'bg-green-500/20 text-green-400' :
+                      activity.type === 'production' ? 'bg-blue-500/20 text-blue-400' :
+                      activity.type === 'quality' ? 'bg-purple-500/20 text-purple-400' :
+                      activity.type === 'delivery' ? 'bg-yellow-500/20 text-yellow-400' :
+                      activity.type === 'alert' ? 'bg-red-500/20 text-red-400' :
+                      activity.type === 'user' ? 'bg-indigo-500/20 text-indigo-400' :
+                      'bg-gray-500/20 text-gray-400'
+                    }`}>
+                      {activity.type}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    {Object.entries(activity.details).map(([key, value]) => (
+                      <div key={key} className="flex justify-between">
+                        <span className="text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}:</span>
+                        <span className="text-white">
+                          {Array.isArray(value) ? value.join(', ') : value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )
+    });
+  };
+
   const topClients = [
     { name: 'Bouwbedrijf Amsterdam', orders: 12, revenue: 45000, status: 'active' },
     { name: 'Architectenbureau Rotterdam', orders: 8, revenue: 32000, status: 'active' },
@@ -828,7 +1066,10 @@ export default function DashboardPage() {
           {/* Bottom Row */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
             {/* Recent Activity */}
-            <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
+            <button 
+              onClick={openActivityModal}
+              className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up w-full text-left transition-all duration-200 hover:border-orange-500/50 hover:bg-gray-900/50"
+            >
               <h3 className="text-lg font-semibold text-white mb-4">Recente Activiteit</h3>
               <div className="space-y-4">
                 {recentActivity.map((activity) => (
@@ -844,7 +1085,7 @@ export default function DashboardPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </button>
 
             {/* Top Clients */}
             <div className="bg-black rounded-lg p-6 border border-gray-800 hover-lift animate-fade-in-up">
